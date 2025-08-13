@@ -1,0 +1,56 @@
+/* // src/components/common/SEO/SEO.css */
+.seo-container {
+  position: relative;
+}
+
+.structured-data {
+  display: none;
+}
+
+/* Breadcrumb Styles */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-sm) 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-secondary-600);
+}
+
+.breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.breadcrumb__link {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.breadcrumb__link:hover {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+}
+
+.breadcrumb__separator {
+  color: var(--color-secondary-400);
+}
+
+/* Schema Markup for Development */
+.schema-debug {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background: var(--color-secondary-900);
+  color: var(--color-white);
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  z-index: 9999;
+  max-width: 300px;
+  max-height: 200px;
+  overflow: auto;
+  border-radius: var(--border-radius-md) 0 0 0;
+}

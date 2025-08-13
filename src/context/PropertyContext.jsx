@@ -1,0 +1,152 @@
+import React, { createContext, useContext, useReducer, useCallback } from 'react';
+
+const initialState = {
+  properties: [],
+  currentProperty: null,
+  filters: {
+    propertyType: '',
+    location: '',
+    amenity: '',
+    minPrice: '',
+    maxPrice: '',
+    search: ''
+  },
+  taxonomies: {
+    propertyTypes: [],
+    locations: [],
+    amenities: []
+  },
+  loading: false,
+  error: null,
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 12
+  }
+};
+
+const actions = {
+  SET_LOADING: 'SET_LOADING',
+  SET_ERROR: 'SET_ERROR',
+  SET_PROPERTIES: 'SET_PROPERTIES',
+  APPEND_PROPERTIES: 'APPEND_PROPERTIES',
+  SET_CURRENT_PROPERTY: 'SET_CURRENT_PROPERTY',
+  SET_FILTERS: 'SET_FILTERS',
+  SET_TAXONOMIES: 'SET_TAXONOMIES',
+  SET_PAGINATION: 'SET_PAGINATION'
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case actions.SET_LOADING:
+      return { ...state, loading: action.payload };
+    case actions.SET_ERROR:
+      return { ...state, error: action.payload, loading: false };
+    case actions.SET_PROPERTIES:
+      return { 
+        ...state, 
+        properties: action.payload,
+        loading: false,
+        error: null
+      };
+    case actions.APPEND_PROPERTIES:
+      return { 
+        ...state, 
+        properties: [...state.properties, ...action.payload],
+        loading: false 
+      };
+    case actions.SET_CURRENT_PROPERTY:
+      return { ...state, currentProperty: action.payload };
+    case actions.SET_FILTERS:
+      return { 
+        ...state, 
+        filters: { ...state.filters, ...action.payload },
+        pagination: { ...state.pagination, currentPage: 1 }
+      };
+    case actions.SET_TAXONOMIES:
+      return { ...state, taxonomies: { ...state.taxonomies, ...action.payload } };
+    case actions.SET_PAGINATION:
+      return { ...state, pagination: { ...state.pagination, ...action.payload } };
+    default:
+      return state;
+  }
+};
+
+const PropertyContext = createContext();
+
+export const PropertyProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const setLoading = useCallback(
+    (loading) => dispatch({ type: actions.SET_LOADING, payload: loading }),
+    []
+  );
+
+  const setError = useCallback(
+    (error) => dispatch({ type: actions.SET_ERROR, payload: error }),
+    []
+  );
+
+  const setProperties = useCallback(
+    (properties) => dispatch({ type: actions.SET_PROPERTIES, payload: properties }),
+    []
+  );
+
+  const appendProperties = useCallback(
+    (properties) => dispatch({ type: actions.APPEND_PROPERTIES, payload: properties }),
+    []
+  );
+
+  const setCurrentProperty = useCallback(
+    (property) => dispatch({ type: actions.SET_CURRENT_PROPERTY, payload: property }),
+    []
+  );
+
+  const setFilters = useCallback(
+    (filters) => dispatch({ type: actions.SET_FILTERS, payload: filters }),
+    []
+  );
+
+  const setTaxonomies = useCallback(
+    (taxonomies) => dispatch({ type: actions.SET_TAXONOMIES, payload: taxonomies }),
+    []
+  );
+
+  const setPagination = useCallback(
+    (pagination) => dispatch({ type: actions.SET_PAGINATION, payload: pagination }),
+    []
+  );
+
+  const clearError = useCallback(
+    () => dispatch({ type: actions.SET_ERROR, payload: null }),
+    []
+  );
+
+  const value = {
+    ...state,
+    setLoading,
+    setError,
+    setProperties,
+    appendProperties,
+    setCurrentProperty,
+    setFilters,
+    setTaxonomies,
+    setPagination,
+    clearError
+  };
+
+  return (
+    <PropertyContext.Provider value={value}>
+      {children}
+    </PropertyContext.Provider>
+  );
+};
+
+export const usePropertyContext = () => {
+  const context = useContext(PropertyContext);
+  if (!context) {
+    throw new Error('usePropertyContext must be used within a PropertyProvider');
+  }
+  return context;
+};

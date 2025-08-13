@@ -1,0 +1,166 @@
+/* // src/pages/PropertySingle/PropertySingle.css */
+.property-single {
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  background: var(--color-gray-light);
+}
+
+.property-single__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: var(--spacing-lg);
+}
+
+.property-single__loading p {
+  font-size: var(--font-size-lg);
+  color: var(--color-secondary-600);
+}
+
+.property-single__error {
+  text-align: center;
+  padding: var(--spacing-3xl);
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--color-white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-lg);
+  margin-top: var(--spacing-2xl);
+}
+
+.property-single__error h1 {
+  font-size: var(--font-size-2xl);
+  color: var(--color-secondary-800);
+  margin-bottom: var(--spacing-md);
+}
+
+.property-single__error p {
+  font-size: var(--font-size-lg);
+  color: var(--color-secondary-600);
+  margin-bottom: var(--spacing-xl);
+}
+
+.property-single__back-link {
+  display: inline-block;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-primary-500);
+  color: var(--color-white);
+  text-decoration: none;
+  border-radius: var(--border-radius-lg);
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-fast);
+}
+
+.property-single__back-link:hover {
+  background: var(--color-primary-600);
+}
+
+.property-single__breadcrumb {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-secondary-200);
+  padding: var(--spacing-md) 0;
+}
+
+.property-single__breadcrumb-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.property-single__breadcrumb-link {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+}
+
+.property-single__breadcrumb-link:hover {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+}
+
+.property-single__breadcrumb-separator {
+  color: var(--color-secondary-400);
+  font-size: var(--font-size-sm);
+}
+
+.property-single__breadcrumb-current {
+  color: var(--color-secondary-600);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.property-single__related {
+  background: var(--color-white);
+  padding: var(--spacing-2xl) 0;
+  margin-top: var(--spacing-2xl);
+  border-top: 1px solid var(--color-secondary-200);
+}
+
+.property-single__related-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-xl);
+}
+
+.property-single__related-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-secondary-800);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.property-single__related-content {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  background: var(--color-gray-light);
+  border-radius: var(--border-radius-lg);
+  border: 2px dashed var(--color-secondary-300);
+}
+
+.property-single__related-placeholder {
+  font-size: var(--font-size-base);
+  color: var(--color-secondary-600);
+  margin-bottom: var(--spacing-lg);
+}
+
+.property-single__related-link {
+  display: inline-block;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-primary-500);
+  color: var(--color-white);
+  text-decoration: none;
+  border-radius: var(--border-radius-lg);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+}
+
+.property-single__related-link:hover {
+  background: var(--color-primary-600);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+  .property-single__breadcrumb-container {
+    padding: 0 var(--spacing-lg);
+  }
+  
+  .property-single__breadcrumb-current {
+    word-break: break-word;
+  }
+  
+  .property-single__related-container {
+    padding: 0 var(--spacing-lg);
+  }
+  
+  .property-single__related-title {
+    font-size: var(--font-size-xl);
+  }
+}

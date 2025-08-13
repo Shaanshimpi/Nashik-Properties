@@ -1,0 +1,85 @@
+/* // src/components/property/PropertySearch/PropertySearch.css */
+.property-search {
+  margin-bottom: var(--spacing-xl);
+}
+
+.property-search__form {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+}
+
+.property-search__input-group {
+  position: relative;
+  flex: 1;
+  max-width: 600px;
+}
+
+.property-search__input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.property-search__clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--color-secondary-500);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.property-search__clear:hover {
+  background: var(--color-secondary-100);
+  color: var(--color-secondary-700);
+}
+
+.property-search__button {
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+@media (max-width: 640px) {
+  .property-filter__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .property-filter__actions {
+    justify-content: space-between;
+  }
+  
+  .property-filter__row {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .property-filter__range {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .property-filter__separator {
+    text-align: center;
+    margin: var(--spacing-xs) 0;
+  }
+  
+  .property-filter__amenities {
+    grid-template-columns: 1fr;
+  }
+  
+  .property-search__form {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .property-search__input-group {
+    max-width: none;
+  }
+}

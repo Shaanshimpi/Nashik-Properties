@@ -1,0 +1,79 @@
+/* // src/components/common/ErrorBoundary/ErrorBoundary.css */
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: var(--spacing-xl);
+  background-color: var(--color-gray-light);
+}
+
+.error-boundary__container {
+  text-align: center;
+  max-width: 600px;
+  padding: var(--spacing-2xl);
+  background: var(--color-white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.error-boundary__icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.error-boundary__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-secondary-800);
+  margin-bottom: var(--spacing-md);
+}
+
+.error-boundary__message {
+  font-size: var(--font-size-lg);
+  color: var(--color-secondary-600);
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.6;
+}
+
+.error-boundary__button {
+  background: var(--color-primary-500);
+  color: var(--color-white);
+  border: none;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.error-boundary__button:hover {
+  background: var(--color-primary-600);
+}
+
+.error-boundary__details {
+  margin-top: var(--spacing-xl);
+  text-align: left;
+  background: var(--color-secondary-50);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-secondary-200);
+}
+
+.error-boundary__details summary {
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-boundary__stack {
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-sm);
+  white-space: pre-wrap;
+  overflow-x: auto;
+  background: var(--color-white);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-secondary-300);
+}
