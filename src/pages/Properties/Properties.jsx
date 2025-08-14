@@ -9,7 +9,7 @@ import { useProperties } from '../../hooks/useProperties';
 import Spinner from '../../components/common/Loading/Spinner';
 import './Properties.css';
 import Layout from '../../components/common/Layout/Layout';
-import { formatProperty } from '../../services/api/wordpress';
+import { extractTaxonomies } from '../../services/api/wordpress';
 
 const Properties = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,12 +26,49 @@ const Properties = () => {
 
   const { 
     properties, 
-    propertyTypes, 
-    locations, 
-    amenities, 
-    isLoading, 
-    error 
+    loading, 
+    error,
+    fetchProperties
   } = useProperties();
+
+  // Extract taxonomies from all properties
+  const taxonomies = useMemo(() => {
+    if (!properties || properties.length === 0) {
+      return { amenities: [], locations: [], propertyTypes: [] };
+    }
+
+    const allAmenities = new Map();
+    const allLocations = new Map();
+    const allPropertyTypes = new Map();
+
+    properties.forEach(property => {
+      const { amenities, locations, propertyTypes } = extractTaxonomies(property);
+      
+      amenities.forEach(amenity => {
+        if (!allAmenities.has(amenity.id)) {
+          allAmenities.set(amenity.id, amenity);
+        }
+      });
+      
+      locations.forEach(location => {
+        if (!allLocations.has(location.id)) {
+          allLocations.set(location.id, location);
+        }
+      });
+      
+      propertyTypes.forEach(type => {
+        if (!allPropertyTypes.has(type.id)) {
+          allPropertyTypes.set(type.id, type);
+        }
+      });
+    });
+
+    return {
+      amenities: Array.from(allAmenities.values()),
+      locations: Array.from(allLocations.values()),
+      propertyTypes: Array.from(allPropertyTypes.values())
+    };
+  }, [properties]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -52,9 +89,9 @@ const Properties = () => {
       // Search filter
       if (searchTerm) {
         const searchLower = searchTerm.toLowerCase();
-        const titleMatch = property.title?.rendered?.toLowerCase().includes(searchLower);
-        const descriptionMatch = property.acf?.description?.toLowerCase().includes(searchLower);
-        const addressMatch = property.acf?.address?.toLowerCase().includes(searchLower);
+        const titleMatch = property.title?.toLowerCase().includes(searchLower);
+        const descriptionMatch = property.description?.toLowerCase().includes(searchLower);
+        const addressMatch = property.address?.toLowerCase().includes(searchLower);
         
         if (!titleMatch && !descriptionMatch && !addressMatch) {
           return false;
@@ -63,7 +100,7 @@ const Properties = () => {
 
       // Property type filter
       if (filters.propertyType) {
-        const propertyTypeIds = property._embedded?.['wp:term']?.[1]?.map(t => t.id.toString()) || [];
+        const propertyTypeIds = property.propertyTypes?.map(t => t.id.toString()) || [];
         if (!propertyTypeIds.includes(filters.propertyType)) {
           return false;
         }
@@ -71,14 +108,14 @@ const Properties = () => {
 
       // Location filter
       if (filters.location) {
-        const locationIds = property._embedded?.['wp:term']?.[2]?.map(t => t.id.toString()) || [];
+        const locationIds = property.locations?.map(t => t.id.toString()) || [];
         if (!locationIds.includes(filters.location)) {
           return false;
         }
       }
 
       // Price filters
-      const price = property.acf?.price || 0;
+      const price = property.price || 0;
       if (filters.minPrice && price < parseInt(filters.minPrice)) {
         return false;
       }
@@ -87,7 +124,7 @@ const Properties = () => {
       }
 
       // Area filters
-      const area = property.acf?.area || 0;
+      const area = property.area || 0;
       if (filters.minArea && area < parseInt(filters.minArea)) {
         return false;
       }
@@ -97,7 +134,7 @@ const Properties = () => {
 
       // Amenities filter
       if (filters.amenities.length > 0) {
-        const propertyAmenityIds = property._embedded?.['wp:term']?.[0]?.map(t => t.id) || [];
+        const propertyAmenityIds = property.amenities?.map(t => t.id) || [];
         const hasAllAmenities = filters.amenities.every(amenityId => 
           propertyAmenityIds.includes(parseInt(amenityId))
         );
@@ -159,7 +196,7 @@ const Properties = () => {
 
           <PropertySearch
             onSearch={handleSearch}
-            isLoading={isLoading}
+            isLoading={loading}
             className="properties-page__search"
           />
         </div>
@@ -168,9 +205,7 @@ const Properties = () => {
           <aside className="properties-page__sidebar">
             <PropertyFilter
               onFilterChange={handleFilterChange}
-              propertyTypes={propertyTypes}
-              locations={locations}
-              amenities={amenities}
+              taxonomies={taxonomies}
               initialFilters={filters}
             />
           </aside>
@@ -178,7 +213,7 @@ const Properties = () => {
           <main className="properties-page__main">
             <div className="properties-page__results-header">
               <div className="properties-page__results-count">
-                {isLoading ? (
+                {loading ? (
                   <Spinner size="sm" />
                 ) : (
                   <span>
@@ -189,14 +224,15 @@ const Properties = () => {
             </div>
 
             <PropertyList
-              properties={filteredProperties.map(property => formatProperty(property))}
-              isLoading={isLoading}
-              emptyMessage={
-                searchTerm || Object.values(filters).some(v => Array.isArray(v) ? v.length > 0 : v !== '')
-                  ? "No properties match your search criteria. Try adjusting your filters."
-                  : "No properties available at the moment."
-              }
-            />
+            properties={filteredProperties}
+            loading={loading}
+            emptyMessage={
+              searchTerm || Object.values(filters).some(v => v !== '')
+                ? "No properties match your search criteria. Try adjusting your filters."
+                : "No properties available at the moment."
+            }
+          />
+
           </main>
         </div>
       </div>

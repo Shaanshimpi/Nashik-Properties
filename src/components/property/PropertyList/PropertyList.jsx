@@ -15,12 +15,18 @@ const PropertyList = ({
   showLoadMore = true,
   className = ''
 }) => {
+  const normalizedEmptyMessage = typeof emptyMessage === 'string' 
+    ? emptyMessage 
+    : 'No properties found';
+
   if (error) {
     return (
       <div className={`property-list property-list--error ${className}`}>
         <div className="property-list__error">
           <h3>Error Loading Properties</h3>
-          <p>{error}</p>
+          <div className="property-list__error-message">
+            {typeof error === 'string' ? error : 'Failed to load properties'}
+          </div>
           <Button onClick={() => window.location.reload()}>
             Refresh Page
           </Button>
@@ -34,7 +40,9 @@ const PropertyList = ({
       <div className={`property-list property-list--empty ${className}`}>
         <div className="property-list__empty">
           <h3>No Properties Available</h3>
-          <p>{emptyMessage}</p>
+          <div className="property-list__empty-message">
+            {normalizedEmptyMessage}
+          </div>
         </div>
       </div>
     );
@@ -46,7 +54,10 @@ const PropertyList = ({
         {properties.map((property) => (
           <PropertyCard 
             key={property.id} 
-            property={property} 
+            property={{
+              ...property,
+              images: Array.isArray(property.images) ? property.images : []
+            }} 
           />
         ))}
         
@@ -77,14 +88,22 @@ PropertyList.propTypes = {
       title: PropTypes.string.isRequired,
       price: PropTypes.number,
       address: PropTypes.string,
-      images: PropTypes.arrayOf(PropTypes.string)
+      area: PropTypes.number,
+      images: PropTypes.array,
+      featured: PropTypes.bool
     })
   ),
   loading: PropTypes.bool,
-  error: PropTypes.string,
+  error: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ]),
   hasMore: PropTypes.bool,
   onLoadMore: PropTypes.func,
-  emptyMessage: PropTypes.string,
+  emptyMessage: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ]),
   showLoadMore: PropTypes.bool,
   className: PropTypes.string
 };

@@ -11,9 +11,13 @@ const PropertyCard = ({
     address: '',
     area: 0,
     images: [],
-    featured: false
+    featured: false,
+    amenities: [],
+    locations: [],
+    propertyTypes: []
   }, 
-  loading = false 
+  loading = false,
+  showBadges = true
 }) => {
   if (loading) {
     return (
@@ -26,13 +30,41 @@ const PropertyCard = ({
             <span className="skeleton"></span>
             <span className="skeleton"></span>
           </div>
+          {showBadges && (
+            <div className="property-card__badges">
+              <span className="skeleton skeleton-badge"></span>
+              <span className="skeleton skeleton-badge"></span>
+            </div>
+          )}
         </div>
       </article>
     );
   }
 
-  const { id, title, price, address, area, images, featured } = property;
-  const firstImage = images?.[0] || '';
+  const { 
+    id, 
+    title, 
+    price, 
+    address, 
+    area, 
+    images = [], 
+    featured,
+    amenities = [],
+    locations = [],
+    propertyTypes = []
+  } = property;
+
+  const getFirstImage = () => {
+    if (!images || images.length === 0) return '';
+    const firstImg = images[0];
+    return typeof firstImg === 'string' 
+      ? firstImg 
+      : firstImg.url || firstImg.full_image_url || firstImg.src || '';
+  };
+
+  const firstImage = getFirstImage();
+  const primaryLocation = locations[0]?.name || '';
+  const primaryType = propertyTypes[0]?.name || '';
 
   return (
     <article className="property-card">
@@ -45,7 +77,7 @@ const PropertyCard = ({
               loading="lazy"
               onError={(e) => {
                 e.target.onerror = null; 
-                e.target.src = '/placeholder-property.jpg';
+                //e.target.src = '/placeholder-property.jpg';
               }}
             />
           ) : (
@@ -58,12 +90,29 @@ const PropertyCard = ({
           )}
         </div>
         <div className="property-card__content">
-          <h3>{title}</h3>
-          <p className="property-card__address">{address}</p>
+          <h3 className="property-card__title">{title}</h3>
+          <div className="property-card__address">{address}</div>
           <div className="property-card__meta">
-            <span>₹{price?.toLocaleString('en-IN') || 'Price on request'}</span>
-            {area && <span>{area} sq ft</span>}
+            <span className="property-card__price">
+              ₹{price?.toLocaleString('en-IN') || 'Price on request'}
+            </span>
+            {area && <span className="property-card__area">{area} sq ft</span>}
           </div>
+          
+          {showBadges && (primaryLocation || primaryType) && (
+            <div className="property-card__badges">
+              {primaryLocation && (
+                <span className="property-card__location-badge">
+                  {primaryLocation}
+                </span>
+              )}
+              {primaryType && (
+                <span className="property-card__type-badge">
+                  {primaryType}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </Link>
     </article>
@@ -77,10 +126,35 @@ PropertyCard.propTypes = {
     price: PropTypes.number,
     address: PropTypes.string,
     area: PropTypes.number,
-    images: PropTypes.arrayOf(PropTypes.string),
-    featured: PropTypes.bool
+    images: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+          url: PropTypes.string,
+          full_image_url: PropTypes.string,
+          src: PropTypes.string
+        })
+      ])
+    ),
+    featured: PropTypes.bool,
+    amenities: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      taxonomy: PropTypes.string
+    })),
+    locations: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      taxonomy: PropTypes.string
+    })),
+    propertyTypes: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      taxonomy: PropTypes.string
+    }))
   }),
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  showBadges: PropTypes.bool
 };
 
 export default PropertyCard;

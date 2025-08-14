@@ -19,30 +19,52 @@ export const useProperties = () => {
     clearError
   } = usePropertyContext();
 
-  const formatPropertyData = useCallback((property) => {
-    if (!property) return null;
+const formatPropertyData = useCallback((property) => {
+  if (!property) return null;
+  
+  // Extract taxonomies directly from _embedded
+  const terms = property._embedded?.['wp:term'] || [];
+  const allTerms = terms.flat();
+  
+  // Normalize images
+  const normalizeImages = (images) => {
+    if (!images) return [];
     
-    const terms = property._embedded?.['wp:term'] || [];
-    const allTerms = terms.flat();
+    // If images is an array of objects (from photo_gallery.images)
+    if (Array.isArray(images) && images.length > 0) {
+      return images.map(img => {
+        if (typeof img === 'object') {
+          return img.full_image_url || img.url || img.src || '';
+        }
+        return img;
+      }).filter(url => url !== '');
+    }
     
-    return {
-      id: property.id,
-      title: property.title?.rendered || property.title || 'Untitled Property',
-      description: property.acf?.description || '',
-      price: property.acf?.price || 0,
-      address: property.acf?.address || '',
-      area: property.acf?.area || 0,
-      images: property.acf?.photo_gallery?.images?.flat() || [],
-      amenities: allTerms.filter(term => term.taxonomy === 'amenity'),
-      propertyTypes: allTerms.filter(term => term.taxonomy === 'property-type'),
-      locations: allTerms.filter(term => term.taxonomy === 'location'),
-      slug: property.slug,
-      link: property.link,
-      date: property.date,
-      featured: property.acf?.featured || allTerms.some(term => term.slug === 'featured') || false,
-      acf: property.acf || {}
-    };
-  }, []);
+    return [];
+  };
+
+  const images = normalizeImages(property.acf?.photo_gallery?.images || []);
+
+  return {
+    id: property.id,
+    title: property.title?.rendered || property.title || 'Untitled Property',
+    description: property.acf?.description || '',
+    price: property.acf?.price || 0,
+    address: property.acf?.address || '',
+    area: property.acf?.area || 0,
+    images: images, // Now this will always be an array of strings
+    amenities: allTerms.filter(term => term?.taxonomy === 'amenity'),
+    locations: allTerms.filter(term => term?.taxonomy === 'location'),
+    propertyTypes: allTerms.filter(term => term?.taxonomy === 'propertytype'),
+    slug: property.slug,
+    link: property.link,
+    date: property.date,
+    featured: property.acf?.featured || false,
+    acf: property.acf || {},
+    _embedded: property._embedded // Keep embedded data
+  };
+}, []);
+
 
   const buildTaxonomyParams = useCallback((filters) => {
     const params = {};
@@ -146,7 +168,7 @@ export const useProperties = () => {
         throw new Error('Property not found');
       }
 
-      const formattedProperty = formatPropertyData(property);
+      const formattedProperty = formatPropertyData(property.data);
       return formattedProperty;
     } catch (err) {
       console.error(`Failed to fetch property ${id}:`, err);
