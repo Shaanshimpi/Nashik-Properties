@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Button from '../../ui/Button/Button';
 import Input from '../../ui/Input/Input';
 import './PropertyFilter.css';
+import { usePropertyContext } from '../../../context/PropertyContext';
 
 const PropertyFilter = ({ 
-  onFilterChange, 
-  propertyTypes = [], 
-  locations = [], 
-  amenities = [],
+  onFilterChange,
   initialFilters = {}
 }) => {
+  const { taxonomies } = usePropertyContext();
   const [filters, setFilters] = useState({
     propertyType: '',
     location: '',
@@ -84,7 +83,6 @@ const PropertyFilter = ({
         </div>
       </div>
 
-      {/* Basic Filters */}
       <div className="property-filter__basic">
         <div className="property-filter__row">
           <div className="property-filter__field">
@@ -95,7 +93,7 @@ const PropertyFilter = ({
               onChange={(e) => handleInputChange('propertyType', e.target.value)}
             >
               <option value="">All Types</option>
-              {propertyTypes.map(type => (
+              {taxonomies.propertyTypes.map(type => (
                 <option key={type.id} value={type.id}>
                   {type.name}
                 </option>
@@ -111,7 +109,7 @@ const PropertyFilter = ({
               onChange={(e) => handleInputChange('location', e.target.value)}
             >
               <option value="">All Locations</option>
-              {locations.map(location => (
+              {taxonomies.locations.map(location => (
                 <option key={location.id} value={location.id}>
                   {location.name}
                 </option>
@@ -142,7 +140,6 @@ const PropertyFilter = ({
         </div>
       </div>
 
-      {/* Advanced Filters */}
       {isExpanded && (
         <div className="property-filter__advanced">
           <div className="property-filter__row">
@@ -166,11 +163,11 @@ const PropertyFilter = ({
             </div>
           </div>
 
-          {amenities.length > 0 && (
+          {taxonomies.amenities.length > 0 && (
             <div className="property-filter__field">
               <label className="property-filter__label">Amenities</label>
               <div className="property-filter__amenities">
-                {amenities.map(amenity => (
+                {taxonomies.amenities.map(amenity => (
                   <label 
                     key={amenity.id} 
                     className="property-filter__checkbox-label"
@@ -196,6 +193,3 @@ const PropertyFilter = ({
 };
 
 export default PropertyFilter;
-
-
-

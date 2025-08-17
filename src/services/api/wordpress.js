@@ -28,31 +28,6 @@ apiClient.interceptors.response.use(
 );
 
 /**
- * Extracts taxonomy terms from a WordPress post
- * @param {Object} post - WordPress post object
- * @returns {Object} Organized taxonomy terms
- */
-export const extractTaxonomies = (post) => {
-  if (!post._embedded || !post._embedded['wp:term']) {
-    return { amenities: [], propertyTypes: [], locations: [] };
-  }
-
-  const terms = post._embedded['wp:term'];
-  
-  // The API response shows:
-  // Index 0: categories
-  // Index 1: tags
-  // Index 2: amenities
-  // Index 3: locations
-  // Index 4: property types
-  return {
-    amenities: terms[2] || [],
-    locations: terms[3] || [],
-    propertyTypes: terms[4] || []
-  };
-};
-
-/**
  * Normalizes the image data from the API response
  * @param {Array|Object} images - Raw image data from API
  * @returns {string[]} Array of image URLs
@@ -79,6 +54,28 @@ const normalizeImages = (images) => {
 };
 
 /**
+ * Extracts taxonomy terms from a WordPress post
+ * @param {Object} post - WordPress post object
+ * @returns {Object} Organized taxonomy terms
+ */
+export const extractTaxonomies = (post) => {
+  if (!post._embedded || !post._embedded['wp:term']) {
+    return { amenities: [], propertyTypes: [], locations: [] };
+  }
+
+  const terms = post._embedded['wp:term'];
+  
+  // Flatten all term arrays and organize by taxonomy
+  const allTerms = terms.flat();
+  
+  return {
+    amenities: allTerms.filter(term => term?.taxonomy === 'amenity'),
+    locations: allTerms.filter(term => term?.taxonomy === 'location'),
+    propertyTypes: allTerms.filter(term => term?.taxonomy === 'propertytype')
+  };
+};
+
+/**
  * Formats raw WordPress property data into a consistent structure
  * @param {Object} property - Raw WordPress property object
  * @returns {Object} Formatted property object
@@ -86,32 +83,31 @@ const normalizeImages = (images) => {
 export const formatProperty = (property) => {
   if (!property) return null;
   
-  const taxonomies = extractTaxonomies(property);
-  if (!property) return null;
-  
-  // Safely access title with multiple fallbacks
-  const title = property.title?.rendered || property.title || 'Untitled Property';
-  
-  // Debug logs
-  console.log('Processing property:', property.id, title);
-  
+  // Extract taxonomies from _embedded if available
+  const taxonomies = property._embedded ? extractTaxonomies(property) : {
+    amenities: [],
+    locations: [],
+    propertyTypes: []
+  };
+
   return {
     id: property.id,
-    title: title,
+    title: property.title?.rendered || property.title || 'Untitled Property',
     description: property.acf?.description || property.excerpt?.rendered || '',
     price: property.acf?.price || 0,
     address: property.acf?.address || '',
     area: property.acf?.area || 0,
     images: normalizeImages(property.acf?.photo_gallery?.images || property.featured_media),
-    content: property.content?.rendered || '',
-    excerpt: property.excerpt?.rendered || '',
-    date: property.date,
-    modified: property.modified,
+    amenities: taxonomies.amenities,
+    locations: taxonomies.locations,
+    propertyTypes: taxonomies.propertyTypes,
     slug: property.slug,
     link: property.link,
+    date: property.date,
+    modified: property.modified,
     featured: property.acf?.featured || false,
-    ...taxonomies,
-    acf: property.acf || {}
+    acf: property.acf || {},
+    _embedded: property._embedded // Keep the embedded data for later use
   };
 };
 
@@ -141,6 +137,14 @@ export const getProperties = async (params = {}) => {
     });
 
     const response = await apiClient.get(`${ENDPOINTS.POSTS}?${queryParams}`);
+    
+    // Debug log to verify embedded data
+    console.log('API Response:', {
+      count: response.data.length,
+      hasEmbedded: response.data.every(p => p._embedded),
+      termCounts: response.data.map(p => p._embedded?.['wp:term']?.length || 0)
+    });
+    
     return response.data.map(formatProperty).filter(property => property !== null);
   } catch (error) {
     console.error('API Error Details:', error.response?.data);
@@ -158,7 +162,6 @@ export const getPropertyById = async (id) => {
     const response = await apiClient.get(`${ENDPOINTS.POST_BY_ID(id)}?_embed=wp:term`);
     const formattedProperty = formatProperty(response.data);
     
-    // Return a consistent response structure
     return {
       success: true,
       data: formattedProperty,
@@ -167,7 +170,6 @@ export const getPropertyById = async (id) => {
   } catch (error) {
     console.error(`Failed to fetch property ${id}:`, error);
     
-    // Return a consistent error structure
     return {
       success: false,
       error: error.message || `Failed to fetch property ${id}`,
@@ -232,7 +234,7 @@ export const getPropertiesByType = async (typeId, params = {}) => {
     });
 
     const response = await apiClient.get(`${ENDPOINTS.POSTS}?${queryParams}`);
-    return response.data;
+    return response.data.map(formatProperty).filter(property => property !== null);
   } catch (error) {
     throw new Error(`Failed to fetch properties by type: ${error.message}`);
   }
@@ -255,7 +257,7 @@ export const getPropertiesByLocation = async (locationId, params = {}) => {
     });
 
     const response = await apiClient.get(`${ENDPOINTS.POSTS}?${queryParams}`);
-    return response.data;
+    return response.data.map(formatProperty).filter(property => property !== null);
   } catch (error) {
     throw new Error(`Failed to fetch properties by location: ${error.message}`);
   }
@@ -278,7 +280,7 @@ export const getPropertiesByAmenity = async (amenityId, params = {}) => {
     });
 
     const response = await apiClient.get(`${ENDPOINTS.POSTS}?${queryParams}`);
-    return response.data;
+    return response.data.map(formatProperty).filter(property => property !== null);
   } catch (error) {
     throw new Error(`Failed to fetch properties by amenity: ${error.message}`);
   }
@@ -287,14 +289,6 @@ export const getPropertiesByAmenity = async (amenityId, params = {}) => {
 /**
  * Fetches properties with multiple filters
  * @param {Object} filters - Filter parameters
- * @param {string} [filters.search] - Search term
- * @param {number} [filters.propertytype] - Property type ID
- * @param {number} [filters.location] - Location ID
- * @param {number} [filters.amenity] - Amenity ID
- * @param {number} [filters.min_price] - Minimum price
- * @param {number} [filters.max_price] - Maximum price
- * @param {number} [filters.per_page=10] - Items per page
- * @param {number} [filters.page=1] - Page number
  * @returns {Promise<Property[]>} Filtered properties
  */
 export const getPropertiesByFilters = async (filters = {}) => {
@@ -320,7 +314,7 @@ export const getPropertiesByFilters = async (filters = {}) => {
     if (filters.max_price) queryParams.append('max_price', filters.max_price);
 
     const response = await apiClient.get(`${ENDPOINTS.POSTS}?${queryParams}`);
-    return response.data;
+    return response.data.map(formatProperty).filter(property => property !== null);
   } catch (error) {
     throw new Error(`Failed to search properties: ${error.message}`);
   }
@@ -329,9 +323,7 @@ export const getPropertiesByFilters = async (filters = {}) => {
 /**
  * Fetches related properties
  * @param {Object} [params] - Query parameters
- * @param {number[]} [params.exclude] - IDs to exclude
- * @param {number} [params.per_page=4] - Items per page
-//  * @returns {Promise<{success: boolean, data?: Property[], error?: string, status?: number}>} Result object
+ * @returns {Promise<Object>} Result object
  */
 export const getRelatedProperties = async (params = {}) => {
   try {
@@ -345,7 +337,7 @@ export const getRelatedProperties = async (params = {}) => {
     const response = await apiClient.get(`${ENDPOINTS.POSTS}?${queryParams}`);
     return {
       success: true,
-      data: response.data,
+      data: response.data.map(formatProperty).filter(property => property !== null),
       headers: response.headers
     };
   } catch (error) {
@@ -386,12 +378,10 @@ export const getFeaturedProperties = async (count = 6) => {
 
     return recentResponse || [];
   } catch (error) {
-     console.error('Error fetching featured properties:', error);
-     return [];
-   }
- };
-
-// [Keep all your other API functions unchanged...]
+    console.error('Error fetching featured properties:', error);
+    return [];
+  }
+};
 
 export default {
   getProperties,
