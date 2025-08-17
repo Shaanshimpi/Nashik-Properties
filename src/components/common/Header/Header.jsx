@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Header.css';
+import logo from '../../../assets/logo/npc-logo.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,7 +58,12 @@ const Header = () => {
           {/* Logo */}
           <div className="header__logo">
             <Link to="/" className="header__logo-link">
-              <span className="header__logo-text">Nashik Properties</span>
+              <img 
+                src={logo} 
+                alt="Nashik Properties Club" 
+                className="header__logo-image"
+              />
+              <span>Nashik Properties Club</span>
             </Link>
           </div>
 
