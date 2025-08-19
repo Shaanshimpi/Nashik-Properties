@@ -93,13 +93,9 @@ const PropertyCard = ({
           <h3 className="property-card__title">{title}</h3>
           <div className="property-card__address">{address}</div>
           <div className="property-card__meta">
-            <span className="property-card__price">
-              ₹{price?.toLocaleString('en-IN') || 'Price on request'}
-            </span>
             {area && <span className="property-card__area">{area} sq ft</span>}
-          </div>
-          
-          {showBadges && (primaryLocation || primaryType) && (
+
+            {showBadges && (primaryLocation || primaryType) && (
             <div className="property-card__badges">
               {primaryLocation && (
                 <span className="property-card__location-badge">
@@ -113,6 +109,11 @@ const PropertyCard = ({
               )}
             </div>
           )}
+          <br/><br/>
+          <span className="property-card__price">
+              ₹{price?.toLocaleString('en-IN') || 'Price on request'}
+            </span>
+          </div>
         </div>
       </Link>
     </article>

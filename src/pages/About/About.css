@@ -23,8 +23,13 @@
   position: relative;
   overflow: hidden;
   margin-bottom: 6rem;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
 }
 
 .about-hero::before {

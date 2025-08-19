@@ -61,11 +61,7 @@ const Home = () => {
   );
 
   return (
-    <Layout
-      title="Elite Real Estate Properties"
-      description="Discover luxury properties with our premium real estate services. Verified listings, expert guidance, and exceptional service."
-      keywords="luxury real estate, premium properties, buy home, sell property, high-end apartments, villas, commercial real estate"
-    >
+    <>
       {/* Hero Section */}
       <section className="home-hero">
         <div className="home-hero__content container">
@@ -210,7 +206,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </Layout>
+    </>
   );
 };
 
