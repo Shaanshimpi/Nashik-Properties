@@ -175,7 +175,7 @@ const Properties = () => {
   }
 
   return (
-    <Layout>
+    <>
       <MetaTags
         title={pageTitle}
         description={pageDescription}
@@ -236,7 +236,7 @@ const Properties = () => {
           </main>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

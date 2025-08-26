@@ -1,124 +1,492 @@
-/* // src/pages/Properties/Properties.css */
+/* ==========================================
+   ELEVATED PREMIUM PROPERTY LIST PAGE DESIGN
+   ========================================== */
+
 .properties-page {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--spacing-xl);
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  overflow-x: hidden;
 }
 
+/* ===== Header Section ===== */
 .properties-page__header {
-  margin-bottom: var(--spacing-2xl);
+  background: linear-gradient(180deg, #db865d, #8b4513);
+  color: white;
+  padding: 6rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 6rem;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.properties-page__header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(219, 134, 93, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(230, 153, 117, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.properties-page__header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #db865d, #e69975, #db865d);
+  opacity: 0.9;
+}
+
+.properties-page__header:hover {
+  /* Removed hover effect */
 }
 
 .properties-page__title-section {
-  text-align: center;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: 3rem;
+  position: relative;
+  padding-bottom: 2.5rem;
+}
+
+.properties-page__title-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 1; transform: translateX(-50%) scaleX(1); }
+  50% { opacity: 0.7; transform: translateX(-50%) scaleX(1.1); }
 }
 
 .properties-page__title {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-secondary-800);
-  margin-bottom: var(--spacing-md);
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -1px;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(135deg, #ffffff 100%, #f5f5f5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .properties-page__subtitle {
-  font-size: var(--font-size-lg);
-  color: var(--color-secondary-600);
-  max-width: 600px;
+  color: white;
+  font-size: 1.5rem;
+  opacity: 0.9;
+  max-width: 800px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.8;
+  font-weight: 300;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* ===== Search Component ===== */
 .properties-page__search {
-  display: flex;
-  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
+/* Search button styling */
+.properties-page__search button,
+.search-form__submit,
+.search__submit,
+[type="submit"],
+button[class*="search"],
+button[class*="Search"] {
+  background: #db865d !important;
+  border-color: #db865d !important;
+}
+
+.properties-page__search button:hover,
+.search-form__submit:hover,
+.search__submit:hover,
+[type="submit"]:hover,
+button[class*="search"]:hover,
+button[class*="Search"]:hover {
+  background: #c67751 !important;
+  border-color: #c67751 !important;
+}
+
+/* ===== Main Content Layout ===== */
 .properties-page__content {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 2rem;
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: var(--spacing-2xl);
+  grid-template-columns: 340px 1fr;
+  gap: 3rem;
   align-items: start;
 }
 
+/* ===== Sidebar Filters ===== */
 .properties-page__sidebar {
   position: sticky;
-  top: var(--spacing-xl);
+  top: 7rem;
+  background: white;
+  border-radius: 1.5rem;
+  padding: 0rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(219, 134, 93, 0.1);
+  backdrop-filter: blur(15px);
+  transform: translateY(0);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
+.properties-page__sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  /* background: linear-gradient(90deg, #db865d, #e69975, #db865d); */
+  opacity: 0.8;
+}
+
+.properties-page__sidebar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== Main Results Area ===== */
 .properties-page__main {
-  min-height: 400px;
+  min-height: 500px;
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(219, 134, 93, 0.1);
+  backdrop-filter: blur(15px);
+  position: relative;
+  overflow: hidden;
 }
 
+.properties-page__main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #db865d, #e69975, #db865d);
+  opacity: 0.8;
+}
+
+/* ===== Results Header ===== */
 .properties-page__results-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-lg);
-  padding: var(--spacing-md) 0;
-  border-bottom: 1px solid var(--color-secondary-200);
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid rgba(219, 134, 93, 0.1);
+  position: relative;
+}
+
+.properties-page__results-header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, #db865d, #e69975);
+  border-radius: 2px;
 }
 
 .properties-page__results-count {
-  font-size: var(--font-size-sm);
-  color: var(--color-secondary-600);
-  font-weight: var(--font-weight-medium);
+  font-size: 1rem;
+  color: #616161;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(219, 134, 93, 0.05);
+  border-radius: 50px;
+  border: 1px solid rgba(219, 134, 93, 0.1);
+  transition: all 0.3s ease;
 }
 
+.properties-page__results-count:hover {
+  background: rgba(219, 134, 93, 0.08);
+  transform: translateY(-1px);
+}
+
+/* ===== Error State ===== */
 .properties-page__error {
   text-align: center;
-  padding: var(--spacing-3xl);
-  background: var(--color-white);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--shadow-lg);
+  padding: 5rem 3rem;
+  background: white;
+  border-radius: 2rem;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(219, 134, 93, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.properties-page__error::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #db865d, #e69975, #db865d);
 }
 
 .properties-page__error h1 {
-  font-size: var(--font-size-2xl);
-  color: var(--color-secondary-800);
-  margin-bottom: var(--spacing-md);
+  font-size: 2.5rem;
+  color: #212121;
+  margin-bottom: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
 }
 
 .properties-page__error p {
-  font-size: var(--font-size-lg);
-  color: var(--color-secondary-600);
+  font-size: 1.2rem;
+  color: #616161;
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+/* ===== Property List Grid ===== */
+.property-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 1200px) {
+  .properties-page__content {
+    grid-template-columns: 300px 1fr;
+    gap: 2.5rem;
+  }
+  
+  /* Removed sidebar padding override */
 }
 
 @media (max-width: 1024px) {
   .properties-page__content {
+    padding: 0 2rem;
     grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
   }
   
   .properties-page__sidebar {
     position: static;
-    order: 2;
+    margin-bottom: 2rem;
   }
   
-  .properties-page__main {
-    order: 1;
+  .property-list {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .properties-page__header {
+    padding: 4rem 0;
+    margin-bottom: 4rem;
   }
 }
 
 @media (max-width: 768px) {
-  .properties-page {
-    padding: var(--spacing-lg);
+  .properties-page__content {
+    padding: 0 1.5rem 2.5rem;
   }
   
   .properties-page__title {
-    font-size: var(--font-size-3xl);
+    font-size: 3rem;
   }
   
   .properties-page__subtitle {
-    font-size: var(--font-size-base);
+    font-size: 1.3rem;
   }
   
-  .properties-page__results-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--spacing-md);
+  .properties-page__main {
+    padding: 2rem;
+    border-radius: 1.25rem;
   }
+  
+  .properties-page__header {
+    padding: 4rem 0;
+    margin-bottom: 4rem;
+  }
+  
+  .property-list {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .properties-page__content {
+    padding: 0 1rem 2rem;
+  }
+  
+  .properties-page__title {
+    font-size: 2.5rem;
+  }
+  
+  .properties-page__subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .property-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .properties-page__error {
+    padding: 3rem 2rem;
+    border-radius: 1.5rem;
+  }
+  
+  .properties-page__main {
+    padding: 1.5rem;
+  }
+  
+  .properties-page__header {
+    padding: 3rem 0;
+    margin-bottom: 3rem;
+  }
+}
+
+/* ===== Loading Spinner ===== */
+.property-list__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  color: #616161;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.property-list__spinner {
+  color: #db865d;
+  margin-right: 0.75rem;
+}
+
+/* ===== Empty State ===== */
+.property-list--empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 1.5rem;
+  border: 2px dashed rgba(219, 134, 93, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.property-list--empty::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #db865d, #e69975, #db865d);
+  opacity: 0.6;
+}
+
+.property-list--empty h3 {
+  font-size: 1.75rem;
+  color: #212121;
+  margin-bottom: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+}
+
+.property-list--empty p {
+  font-size: 1.15rem;
+  color: #616161;
+  max-width: 550px;
+  margin: 0 auto 2rem;
+  line-height: 1.8;
+  opacity: 0.9;
+}
+
+/* ===== Enhanced Visual Effects ===== */
+.properties-page__main {
+  position: relative;
+}
+
+.properties-page__main::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ===== Micro-interactions ===== */
+.properties-page__results-count,
+.property-list--empty {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.property-list--empty:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(219, 134, 93, 0.15);
+}
+
+/* ===== Enhanced Visual Depth ===== */
+.properties-page__header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 20px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* ===== Accessibility Enhancements ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .properties-page__header:hover,
+  .property-list--empty:hover {
+    /* Removed hover effects */
+  }
+}
+
+/* ===== Focus States ===== */
+.properties-page__results-count:focus-visible {
+  outline: 2px solid #db865d;
+  outline-offset: 2px;
 }

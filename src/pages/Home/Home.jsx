@@ -16,7 +16,6 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const Navigate = useNavigate();
 
-  // Initialize with loader data
   useEffect(() => {
     if (initialProperties && initialProperties.length > 0) {
       setFeaturedProperties(initialProperties);
@@ -33,7 +32,6 @@ const Home = () => {
     }
   };
 
-  // Enhanced stats data with icons
   const stats = [
     { 
       label: 'Premium Properties', 
@@ -73,7 +71,6 @@ const Home = () => {
     }
   ];
 
-  // Enhanced features with better icons
   const features = [
     {
       icon: (
@@ -129,7 +126,6 @@ const Home = () => {
     { label: 'Legal Compliance', value: '100%' }
   ];
 
-  // Determine if we're showing featured or recent properties
   const isShowingFeatured = featuredProperties.some(prop => 
     prop._embedded?.['wp:term']?.[0]?.some(term => term.slug === 'featured')
   );
@@ -191,79 +187,47 @@ const Home = () => {
                   </Button>
                 </form>
               </div>
-              
-              {/* Property Type Quick Access */}
-              <div className="hero__property-types">
-                {propertyTypes.map((type, index) => (
-                  <a key={index} href={type.link} className="property-type-card">
-                    <span className="property-type-name">{type.name}</span>
-                    <span className="property-type-count">{type.count}</span>
-                  </a>
-                ))}
-              </div>
+            </form>
+            
+            <div className="home-hero__quick-links">
+              <a href="/properties?type=apartment" className="home-hero__quick-link">Luxury Apartments</a>
+              <a href="/properties?type=villa" className="home-hero__quick-link">Modern Villas</a>
+              <a href="/properties?location=central" className="home-hero__quick-link">Central Locations</a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Trust Indicators */}
-      <section className="trust-indicators">
+      {/* Stats Section */}
+      <section className="home-stats">
         <div className="container">
-          <div className="trust-indicators__grid">
-            {trustIndicators.map((indicator, index) => (
-              <div key={index} className="trust-indicator">
-                <div className="trust-indicator__value">{indicator.value}</div>
-                <div className="trust-indicator__label">{indicator.label}</div>
+          <div className="home-stats__grid">
+            {stats.map((stat, index) => (
+              <div key={`stat-${index}`} className="home-stats__item">
+                <div className="home-stats__value">{stat.value}</div>
+                <div className="home-stats__label">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="stats">
-        <div className="container">
-          <div className="stats__content">
-            <div className="stats__header">
-              <h2>Excellence in Numbers</h2>
-              <p>Our commitment to quality reflected in measurable achievements</p>
-            </div>
-            <div className="stats__grid">
-              {stats.map((stat, index) => (
-                <div key={`stat-${index}`} className="stats__item">
-                  <div className="stats__icon">{stat.icon}</div>
-                  <div className="stats__value">{stat.value}</div>
-                  <div className="stats__label">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Features Section */}
-      <section className="features">
+      <section className="home-features">
         <div className="container">
-          <div className="features__header">
-            <div className="section-badge">Our Advantages</div>
-            <h2 className="features__title">Why Industry Leaders Choose Us</h2>
-            <p className="features__subtitle">
-              Combining cutting-edge technology with personalized service to deliver 
-              unparalleled real estate experiences that exceed expectations.
+          <div className="home-section-header">
+            <h2 className="home-section-header__title">Why Choose Our Services</h2>
+            <p className="home-section-header__subtitle">
+              We combine market expertise with personalized service to deliver exceptional results
             </p>
           </div>
           
-          <div className="features__grid">
+          <div className="home-features__grid">
             {features.map((feature, index) => (
-              <div key={`feature-${index}`} className="features__item">
-                <div className="features__icon">{feature.icon}</div>
-                <h3 className="features__item-title">{feature.title}</h3>
-                <p className="features__item-description">{feature.description}</p>
-                <div className="features__item-arrow">
-                  <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/>
-                  </svg>
-                </div>
+              <div key={`feature-${index}`} className="home-features__card">
+                <div className="home-features__icon">{feature.icon}</div>
+                <h3 className="home-features__title">{feature.title}</h3>
+                <p className="home-features__description">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -343,70 +307,51 @@ const Home = () => {
           </div>
           
           {isLoading ? (
-            <div className="loading-wrapper">
+            <div className="home-loading">
               <Spinner size="large" />
             </div>
           ) : error ? (
-            <div className="error-message">
-              <div className="error-icon">
-                <svg viewBox="0 0 20 20" width="48" height="48" fill="currentColor">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"/>
-                </svg>
-              </div>
-              <h3>Unable to load properties</h3>
-              <p>{error}</p>
+            <div className="home-error">
+              <p className="home-error__message">{error}</p>
               <Button onClick={() => window.location.reload()}>
                 Try Again
               </Button>
             </div>
           ) : (
-            <PropertyList
-              properties={featuredProperties}
-              emptyMessage={
-                <div className="empty-properties">
-                  <div className="empty-properties__icon">
-                    <svg viewBox="0 0 20 20" width="64" height="64" fill="currentColor">
-                      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                  </div>
-                  <h3>No Properties Available</h3>
-                  <p>
-                    {isShowingFeatured
-                      ? "We're currently updating our featured properties collection."
-                      : "New properties will be added soon. Check back later."
-                    }
-                  </p>
-                  <Button href="/properties" variant="outline">
-                    Explore All Listings
+            <>
+              <PropertyList
+                properties={featuredProperties}
+                emptyMessage={
+                  isShowingFeatured
+                    ? "Currently no featured properties available"
+                    : "No recent listings at this time"
+                }
+                showLoadMore={false}
+              />
+              
+              {featuredProperties.length > 0 && (
+                <div className="home-properties__view-all">
+                  <Button href="/properties" variant="outline" size="large">
+                    Browse All Properties
                   </Button>
                 </div>
-              }
-              showLoadMore={false}
-            />
+              )}
+            </>
           )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="cta">
+      <section className="home-cta">
         <div className="container">
-          <div className="cta__content">
-            <div className="cta__text">
-              <div className="section-badge section-badge--light">Ready to Begin?</div>
-              <h2 className="cta__title">
-                Your Dream Property Awaits Discovery
-              </h2>
-              <p className="cta__subtitle">
-                Join thousands of satisfied customers who found their perfect property 
-                through our premium platform. Let our experts guide you to your ideal investment.
-              </p>
-            </div>
-            <div className="cta__actions">
-              <Button href="/properties" size="large" className="cta__primary-button">
-                Explore Premium Properties
-                <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
-                </svg>
+          <div className="home-cta__content">
+            <h2 className="home-cta__title">Ready to Begin Your Property Journey?</h2>
+            <p className="home-cta__text">
+              Our team is ready to provide expert guidance tailored to your needs
+            </p>
+            <div className="home-cta__buttons">
+              <Button href="/properties" size="large" className="home-cta__button">
+                Explore Properties
               </Button>
               <Button href="/projects" size="large" className="cta__secondary-button">
                 View Developer Projects
@@ -424,7 +369,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </Layout>
+    </>
   );
 };
 
