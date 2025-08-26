@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import Layout from '../../components/common/Layout/Layout';
 import PropertyList from '../../components/property/PropertyList/PropertyList';
+import ProjectList from '../../components/project/ProjectList/ProjectList';
 import Button from '../../components/ui/Button/Button';
 import Spinner from '../../components/common/Loading/Spinner';
 import './Home.css';
 
 const Home = () => {
-  const { properties: initialProperties } = useLoaderData();
+  const { properties: initialProperties, projects: initialProjects } = useLoaderData();
   const [featuredProperties, setFeaturedProperties] = useState([]);
+  const [featuredProjects, setFeaturedProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const Navigate = useNavigate();
 
   // Initialize with loader data
   useEffect(() => {
     if (initialProperties && initialProperties.length > 0) {
       setFeaturedProperties(initialProperties);
     }
-  }, [initialProperties]);
+    if (initialProjects && initialProjects.length > 0) {
+      setFeaturedProjects(initialProjects);
+    }
+  }, [initialProperties, initialProjects]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -39,6 +45,15 @@ const Home = () => {
       )
     },
     { 
+      label: 'Developer Projects', 
+      value: '50+',
+      icon: (
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+          <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
+        </svg>
+      )
+    },
+    { 
       label: 'Satisfied Clients', 
       value: '1000+',
       icon: (
@@ -55,15 +70,6 @@ const Home = () => {
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
         </svg>
       )
-    },
-    { 
-      label: 'Cities Served', 
-      value: '5+',
-      icon: (
-        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
-          <path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/>
-        </svg>
-      )
     }
   ];
 
@@ -76,7 +82,7 @@ const Home = () => {
         </svg>
       ),
       title: 'Premium Selection',
-      description: 'Curated collection of luxury properties from prime locations with exceptional value'
+      description: 'Curated collection of luxury properties and developer projects from prime locations'
     },
     {
       icon: (
@@ -85,7 +91,7 @@ const Home = () => {
         </svg>
       ),
       title: 'Verified & Trusted',
-      description: 'Every property undergoes rigorous verification ensuring legal clarity and authenticity'
+      description: 'Every property and project undergoes rigorous verification ensuring legal clarity'
     },
     {
       icon: (
@@ -94,7 +100,7 @@ const Home = () => {
         </svg>
       ),
       title: 'Market Insights',
-      description: 'Data-driven market analysis and investment guidance from certified real estate experts'
+      description: 'Data-driven market analysis and investment guidance from certified experts'
     },
     {
       icon: (
@@ -112,7 +118,7 @@ const Home = () => {
     { name: 'Luxury Villas', link: '/properties?type=villa', count: '150+' },
     { name: 'Premium Apartments', link: '/properties?type=apartment', count: '200+' },
     { name: 'Commercial Spaces', link: '/properties?type=commercial', count: '100+' },
-    { name: 'Residential Plots', link: '/properties?type=plot', count: '50+' }
+    { name: 'Developer Projects', link: '/projects', count: '50+' }
   ];
 
   // Trust indicators
@@ -130,9 +136,9 @@ const Home = () => {
 
   return (
     <Layout
-      title="Premium Real Estate Properties | Luxury Homes & Commercial Spaces"
-      description="Discover premium real estate with India's most trusted property platform. Luxury homes, commercial spaces, and investment opportunities with guaranteed authenticity."
-      keywords="premium real estate, luxury properties, commercial real estate, residential properties, property investment, RERA certified"
+      title="Premium Real Estate Properties & Developer Projects | Luxury Homes & Commercial Spaces"
+      description="Discover premium real estate and exclusive developer projects with India's most trusted property platform. Luxury homes, commercial spaces, and investment opportunities with guaranteed authenticity."
+      keywords="premium real estate, luxury properties, commercial real estate, developer projects, residential properties, property investment, RERA certified"
     >
       {/* Hero Section */}
       <section className="hero">
@@ -148,18 +154,21 @@ const Home = () => {
               </div>
               <h1 className="hero__title">
                 Discover <span className="hero__title-highlight">Premium Properties</span>
-                <br />That Define <span className="hero__title-accent">Luxury Living</span>
+                <br />& <span className="hero__title-accent">Developer Projects</span>
               </h1>
               <p className="hero__subtitle">
                 Experience the pinnacle of real estate excellence with our curated collection 
-                of luxury properties. From sophisticated urban apartments to palatial villas, 
-                find your perfect sanctuary.
+                of luxury properties and exclusive developer projects. From sophisticated urban 
+                apartments to palatial villas, find your perfect sanctuary.
               </p>
               
               {/* Enhanced Search Form */}
               <div className="hero__search-container">
                 <div className="hero__search-tabs">
                   <button className="search-tab active">Buy</button>
+                  <button className="search-tab" onClick={() => window.location.href = '/projects'}>
+                    Projects
+                  </button>
                 </div>
                 <form className="hero__search" onSubmit={handleSearchSubmit}>
                   <div className="search-field">
@@ -174,24 +183,8 @@ const Home = () => {
                       className="search-input"
                     />
                   </div>
-                  {/* <div className="search-field search-field--select">
-                    <select className="search-select">
-                      <option>Property Type</option>
-                      <option>Apartment</option>
-                      <option>Villa</option>
-                      <option>Commercial</option>
-                    </select>
-                  </div>
-                  <div className="search-field search-field--select">
-                    <select className="search-select">
-                      <option>Budget Range</option>
-                      <option>Under ₹50L</option>
-                      <option>₹50L - ₹1Cr</option>
-                      <option>Above ₹1Cr</option>
-                    </select>
-                  </div> */}
                   <Button type="submit" size="large" className="search-button">
-                    <svg viewBox="0 0 10 20" width="20" height="20" fill="currentColor">
+                    <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
                       <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
                     </svg>
                     Search Properties
@@ -276,6 +269,50 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Developer Projects Section */}
+      {featuredProjects && featuredProjects.length > 0 && (
+        <section className="featured-projects">
+          <div className="container">
+            <div className="section-header">
+              <div className="section-header__content">
+                <div className="section-badge">Exclusive Developments</div>
+                <h2 className="section-title">Featured Developer Projects</h2>
+                <p className="section-description">
+                  Discover premium residential projects by renowned developers with various configurations
+                </p>
+              </div>
+              <div className="section-header__actions">
+                <Button href="/projects" onClick={() => Navigate('/projects')} variant="outline">
+                  View All Projects
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/>
+                  </svg>
+                </Button>
+              </div>
+            </div>
+            
+            <ProjectList
+              projects={featuredProjects}
+              emptyMessage={
+                <div className="empty-projects">
+                  <div className="empty-projects__icon">
+                    <svg viewBox="0 0 20 20" width="64" height="64" fill="currentColor">
+                      <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
+                    </svg>
+                  </div>
+                  <h3>No Projects Available</h3>
+                  <p>New developer projects will be added soon. Check back later.</p>
+                  <Button href="/projects" variant="outline">
+                    Explore All Projects
+                  </Button>
+                </div>
+              }
+              showLoadMore={false}
+            />
+          </div>
+        </section>
+      )}
 
       {/* Featured/Recent Properties Section */}
       <section className="featured-properties">
@@ -371,7 +408,13 @@ const Home = () => {
                   <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/>
                 </svg>
               </Button>
-              <Button href="/contact" variant="outline" size="large" className="cta__secondary-button">
+              <Button href="/projects" size="large" className="cta__secondary-button">
+                View Developer Projects
+                <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+                  <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
+                </svg>
+              </Button>
+              <Button href="/contact" variant="outline" size="large" className="cta__tertiary-button">
                 Schedule Consultation
                 <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"/>

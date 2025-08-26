@@ -1,0 +1,181 @@
+.project-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.project-card__image-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.project-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.project-card:hover .project-card__image {
+  transform: scale(1.05);
+}
+
+.project-card__badge {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: var(--color-accent-success);
+  color: var(--color-white);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  z-index: 2;
+}
+
+.project-card__content {
+  padding: var(--spacing-lg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-card__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-secondary-800);
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.3;
+}
+
+.project-card__description {
+  color: var(--color-secondary-600);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  margin-bottom: var(--spacing-md);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.project-card__price {
+  margin-bottom: var(--spacing-md);
+}
+
+.project-card__price-range,
+.project-card__single-price {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.project-card__price-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary-500);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.project-card__price-amount {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-600);
+}
+
+.project-card__configurations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.project-card__config-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary-500);
+  font-weight: var(--font-weight-medium);
+}
+
+.project-card__config-item {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--color-primary-100);
+}
+
+.project-card__config-more {
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary-500);
+  font-style: italic;
+}
+
+.project-card__variation-count {
+  margin-top: auto;
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary-500);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-secondary-200);
+}
+
+/* Dark theme support */
+[data-theme="dark"] .project-card {
+  background: var(--color-secondary-800);
+}
+
+[data-theme="dark"] .project-card__title {
+  color: var(--color-white);
+}
+
+[data-theme="dark"] .project-card__description {
+  color: var(--color-secondary-300);
+}
+
+[data-theme="dark"] .project-card__config-item {
+  background: var(--color-primary-800);
+  color: var(--color-primary-100);
+  border-color: var(--color-primary-700);
+}
+
+[data-theme="dark"] .project-card__variation-count {
+  border-top-color: var(--color-secondary-700);
+  color: var(--color-secondary-400);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .project-card__content {
+    padding: var(--spacing-md);
+  }
+  
+  .project-card__price-amount {
+    font-size: var(--font-size-lg);
+  }
+  
+  .project-card__configurations {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .project-card__config-label {
+    margin-bottom: var(--spacing-xs);
+  }
+}
