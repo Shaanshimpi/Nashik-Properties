@@ -131,11 +131,7 @@ const Home = () => {
   );
 
   return (
-    <Layout
-      title="Premium Real Estate Properties & Developer Projects | Luxury Homes & Commercial Spaces"
-      description="Discover premium real estate and exclusive developer projects with India's most trusted property platform. Luxury homes, commercial spaces, and investment opportunities with guaranteed authenticity."
-      keywords="premium real estate, luxury properties, commercial real estate, developer projects, residential properties, property investment, RERA certified"
-    >
+    <>
       {/* Hero Section */}
       <section className="hero">
         <div className="hero__background">
@@ -187,7 +183,7 @@ const Home = () => {
                   </Button>
                 </form>
               </div>
-            </form>
+            </div>
             
             <div className="home-hero__quick-links">
               <a href="/properties?type=apartment" className="home-hero__quick-link">Luxury Apartments</a>
