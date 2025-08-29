@@ -8,6 +8,7 @@ import ProjectSingle from './pages/ProjectSingle/ProjectSingle';
 import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
 import NotFound from './pages/NotFound/NotFound';
 import About from './pages/About/About';
+import BusinessModel from './pages/BusinessModel/BusinessModel';
 import Contact from './pages/Contact/Contact';
 import { getProperties, getPropertyById, formatProperty } from './services/api/wordpress';
 import { getProducts, getProductWithVariations, formatProduct } from './services/api/woocommerce';
@@ -239,6 +240,10 @@ export const router = createBrowserRouter([
       {
         path: "about",
         element: <About />,
+      },
+      {
+        path: "business-model",
+        element: <BusinessModel />,
       },
       {
         path: "contact",
