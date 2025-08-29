@@ -73,7 +73,7 @@ const Footer = () => {
           </div>
 
           {/* Property Types */}
-          <div className="footer__section">
+          {/* <div className="footer__section">
             <h4 className="footer__section-title">Property Types</h4>
             <ul className="footer__links">
               {propertyTypes.map((type) => (
@@ -84,7 +84,7 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Contact Info */}
           <div className="footer__section">

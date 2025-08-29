@@ -112,8 +112,8 @@
 }
 
 .project-card__config-item {
-  background: var(--color-primary-50);
-  color: var(--color-primary-700);
+  background: var(--color-primary-trans);
+  color: var(--color-primary-600);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-xs);
@@ -148,11 +148,11 @@
   color: var(--color-secondary-300);
 }
 
-[data-theme="dark"] .project-card__config-item {
+/* [data-theme="dark"] .project-card__config-item {
   background: var(--color-primary-800);
   color: var(--color-primary-100);
   border-color: var(--color-primary-700);
-}
+} */
 
 [data-theme="dark"] .project-card__variation-count {
   border-top-color: var(--color-secondary-700);

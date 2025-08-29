@@ -10,6 +10,95 @@ const ProjectSingle = () => {
   const { currentProduct, loading, error, fetchProductWithVariations } = useProducts();
   const [selectedConfiguration, setSelectedConfiguration] = useState(null);
   const [selectedVariationDescription, setSelectedVariationDescription] = useState('');
+  const [parsedDescription, setParsedDescription] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
+
+  // Enhanced description parsing function
+  const parseDescription = (description) => {
+    if (!description) return null;
+
+    // Convert HTML to text
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = description;
+    const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+    const sections = {
+      overview: '',
+      keyFeatures: [],
+      amenities: [],
+      locationHighlights: [],
+      rentInfo: '',
+      address: ''
+    };
+
+    const lines = textContent.split('\n')
+      .map(line => line.trim())
+      .filter(line => line && line.length > 1);
+
+    let currentSection = 'overview';
+    let collectingItems = false;
+    let overviewLineCount = 0;
+
+    lines.forEach((line, index) => {
+      const lowerLine = line.toLowerCase();
+      
+      // Section detection
+      if (lowerLine.includes('key features:') || lowerLine.includes('features:')) {
+        currentSection = 'keyFeatures';
+        collectingItems = true;
+        return;
+      } else if (lowerLine.includes('amenities:') || lowerLine.includes('world-class amenities:')) {
+        currentSection = 'amenities';
+        collectingItems = true;
+        return;
+      } else if (lowerLine.includes('location highlights:') || lowerLine.includes('location:')) {
+        currentSection = 'locationHighlights';
+        collectingItems = true;
+        return;
+      } else if (lowerLine.includes('address:') || line.includes('📍')) {
+        currentSection = 'address';
+        collectingItems = false;
+        return;
+      } else if (lowerLine.includes('rent:') || lowerLine.includes('price:')) {
+        currentSection = 'rentInfo';
+        collectingItems = false;
+        return;
+      }
+
+      // Content allocation
+      if (currentSection === 'overview' && overviewLineCount < 3) {
+        sections.overview += line + ' ';
+        overviewLineCount++;
+      } else if (currentSection === 'keyFeatures' && collectingItems) {
+        if (line && !lowerLine.includes('key features:') && !lowerLine.includes('features:')) {
+          sections.keyFeatures.push(line);
+        }
+      } else if (currentSection === 'amenities' && collectingItems) {
+        if (line && !lowerLine.includes('amenities:')) {
+          sections.amenities.push(line);
+        }
+      } else if (currentSection === 'locationHighlights' && collectingItems) {
+        if (line && !lowerLine.includes('location')) {
+          sections.locationHighlights.push(line);
+        }
+      } else if (currentSection === 'address' && !collectingItems) {
+        if (line && !lowerLine.includes('address:') && !line.includes('📍')) {
+          sections.address += line + ' ';
+        }
+      } else if (currentSection === 'rentInfo' && !collectingItems) {
+        if (line && !lowerLine.includes('rent:') && !lowerLine.includes('price:')) {
+          sections.rentInfo += line + ' ';
+        }
+      }
+    });
+
+    // Clean up sections
+    sections.overview = sections.overview.trim();
+    sections.address = sections.address.trim();
+    sections.rentInfo = sections.rentInfo.trim();
+
+    return sections;
+  };
 
   // SEO setup
   useSEO({
@@ -25,10 +114,17 @@ const ProjectSingle = () => {
     }
   }, [id, fetchProductWithVariations]);
 
+  // Parse description when product loads
+  useEffect(() => {
+    if (currentProduct?.description) {
+      const parsed = parseDescription(currentProduct.description);
+      setParsedDescription(parsed);
+    }
+  }, [currentProduct]);
+
   // Set default configuration and description
   useEffect(() => {
     if (currentProduct && currentProduct.variations && currentProduct.variations.length > 0) {
-      // Find the first variation with a valid price
       const firstVariation = currentProduct.variations.find(v => v.price && v.price > 0);
       if (firstVariation) {
         setSelectedConfiguration(firstVariation);
@@ -42,12 +138,26 @@ const ProjectSingle = () => {
     setSelectedVariationDescription(variation.description || '');
   };
 
-  // Get image for selected configuration or fallback to main product image
   const getSelectedConfigurationImage = () => {
     if (selectedConfiguration?.image?.src) {
       return selectedConfiguration.image.src;
     }
     return currentProduct?.images?.[0]?.src || '/default-project.jpg';
+  };
+
+  // Get available tabs based on content
+  const getAvailableTabs = () => {
+    if (!parsedDescription) return [];
+    
+    const tabs = [];
+    if (parsedDescription.overview) tabs.push({ key: 'overview', label: 'Overview', icon: '🏠' });
+    if (parsedDescription.keyFeatures.length > 0) tabs.push({ key: 'features', label: 'Key Features', icon: '✨' });
+    if (parsedDescription.amenities.length > 0) tabs.push({ key: 'amenities', label: 'Amenities', icon: '🏢' });
+    if (parsedDescription.locationHighlights.length > 0) tabs.push({ key: 'location', label: 'Location', icon: '📍' });
+    if (parsedDescription.address) tabs.push({ key: 'address', label: 'Address', icon: '📧' });
+    if (parsedDescription.rentInfo) tabs.push({ key: 'pricing', label: 'Pricing', icon: '💰' });
+    
+    return tabs;
   };
 
   if (loading) {
@@ -90,6 +200,8 @@ const ProjectSingle = () => {
     );
   }
 
+  const availableTabs = getAvailableTabs();
+
   return (
     <div className="project-single">
       <div className="project-single__gallery">
@@ -123,7 +235,103 @@ const ProjectSingle = () => {
           )}
         </div>
         
-        {currentProduct.description && (
+        {/* Enhanced Tabbed Description Section */}
+        {parsedDescription && availableTabs.length > 0 && (
+          <div className="project-single__description-tabs">
+            <div className="tab-navigation">
+              {availableTabs.map(tab => (
+                <button
+                  key={tab.key}
+                  className={`tab-button ${activeTab === tab.key ? 'tab-button--active' : ''}`}
+                  onClick={() => setActiveTab(tab.key)}
+                >
+                  <span className="tab-icon">{tab.icon}</span>
+                  <span className="tab-label">{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="tab-content">
+              {activeTab === 'overview' && parsedDescription.overview && (
+                <div className="tab-content-panel">
+                  <div className="project-overview">
+                    <h3 className="section-title">Project Overview</h3>
+                    <p className="overview-text">{parsedDescription.overview}</p>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'features' && parsedDescription.keyFeatures.length > 0 && (
+                <div className="tab-content-panel">
+                  <h3 className="section-title">Key Features</h3>
+                  <div className="features-grid">
+                    {parsedDescription.keyFeatures.map((feature, index) => (
+                      <div key={index} className="feature-item">
+                        <span className="feature-icon">✓</span>
+                        <span className="feature-text">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'amenities' && parsedDescription.amenities.length > 0 && (
+                <div className="tab-content-panel">
+                  <h3 className="section-title">World-Class Amenities</h3>
+                  <div className="amenities-grid">
+                    {parsedDescription.amenities.map((amenity, index) => (
+                      <div key={index} className="amenity-item">
+                        <span className="amenity-icon">🏢</span>
+                        <span className="amenity-text">{amenity}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'location' && parsedDescription.locationHighlights.length > 0 && (
+                <div className="tab-content-panel">
+                  <h3 className="section-title">Location Highlights</h3>
+                  <div className="location-grid">
+                    {parsedDescription.locationHighlights.map((highlight, index) => (
+                      <div key={index} className="location-item">
+                        <span className="location-icon">📍</span>
+                        <span className="location-text">{highlight}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'address' && parsedDescription.address && (
+                <div className="tab-content-panel">
+                  <h3 className="section-title">Property Address</h3>
+                  <div className="address-info">
+                    <div className="address-card">
+                      <span className="address-icon">🏠</span>
+                      <p className="address-text">{parsedDescription.address}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'pricing' && parsedDescription.rentInfo && (
+                <div className="tab-content-panel">
+                  <h3 className="section-title">Pricing Information</h3>
+                  <div className="pricing-info">
+                    <div className="pricing-card">
+                      <span className="pricing-icon">💰</span>
+                      <p className="pricing-text">{parsedDescription.rentInfo}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Fallback: Show original description if parsing fails */}
+        {!parsedDescription && currentProduct.description && (
           <div 
             className="project-single__description"
             dangerouslySetInnerHTML={{ __html: currentProduct.description }}

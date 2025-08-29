@@ -3,9 +3,14 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import Layout from '../../components/common/Layout/Layout';
 import PropertyList from '../../components/property/PropertyList/PropertyList';
 import ProjectList from '../../components/project/ProjectList/ProjectList';
+import PropertyCard from '../../components/property/PropertyCard/PropertyCard';
 import Button from '../../components/ui/Button/Button';
 import Spinner from '../../components/common/Loading/Spinner';
 import './Home.css';
+
+const handleProjectClick = (project) => {
+  navigate(`/projects/${project.id || project.slug}`);
+};
 
 const Home = () => {
   const { properties: initialProperties, projects: initialProjects } = useLoaderData();
@@ -14,7 +19,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const Navigate = useNavigate();
+  const navigate = useNavigate(); // Changed from Navigate to navigate
 
   useEffect(() => {
     if (initialProperties && initialProperties.length > 0) {
@@ -28,7 +33,8 @@ const Home = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/properties?search=${encodeURIComponent(searchQuery.trim())}`;
+      // Redirect to projects page with search query
+      navigate(`/projects?search=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
@@ -110,11 +116,11 @@ const Home = () => {
     }
   ];
 
-  // Property types for quick access
+  // Property types for quick access - Updated to redirect to projects
   const propertyTypes = [
-    { name: 'Luxury Villas', link: '/properties?type=villa', count: '150+' },
-    { name: 'Premium Apartments', link: '/properties?type=apartment', count: '200+' },
-    { name: 'Commercial Spaces', link: '/properties?type=commercial', count: '100+' },
+    { name: 'Luxury Villas', link: '/projects?search=villa', count: '150+' },
+    { name: 'Premium Apartments', link: '/projects?search=apartment', count: '200+' },
+    { name: 'Commercial Spaces', link: '/projects?search=commercial', count: '100+' },
     { name: 'Developer Projects', link: '/projects', count: '50+' }
   ];
 
@@ -133,62 +139,39 @@ const Home = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="hero">
-        <div className="hero__background">
-          <div className="hero__overlay"></div>
-        </div>
-        <div className="container">
-          <div className="hero__content">
-            <div className="hero__text">
-              <div className="hero__badge">
-                <span className="hero__badge-icon">⭐</span>
-                India's Most Trusted Real Estate Platform
+      <section className="home-hero">
+        <div className="home-hero__content container">
+          <div className="home-hero__text">
+            <h1 className="home-hero__title">
+              <span className="home-hero__title-line">Discover Your</span>
+              <span className="home-hero__title-highlight">Perfect Property</span>
+            </h1>
+            <p className="home-hero__description">
+              Premium real estate services with personalized attention and exclusive listings
+            </p>
+            
+            <form className="home-hero__search" onSubmit={handleSearchSubmit}>
+              <div className="home-hero__search-container">
+                <input
+                  type="text"
+                  placeholder="Search projects by location, type, or features..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="home-hero__search-input"
+                />
+                <button type="submit" className="home-hero__search-button">
+                  <span>Search</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
               </div>
-              <h1 className="hero__title">
-                Discover <span className="hero__title-highlight">Premium Properties</span>
-                <br />& <span className="hero__title-accent">Developer Projects</span>
-              </h1>
-              <p className="hero__subtitle">
-                Experience the pinnacle of real estate excellence with our curated collection 
-                of luxury properties and exclusive developer projects. From sophisticated urban 
-                apartments to palatial villas, find your perfect sanctuary.
-              </p>
-              
-              {/* Enhanced Search Form */}
-              <div className="hero__search-container">
-                <div className="hero__search-tabs">
-                  <button className="search-tab active">Buy</button>
-                  <button className="search-tab" onClick={() => window.location.href = '/projects'}>
-                    Projects
-                  </button>
-                </div>
-                <form className="hero__search" onSubmit={handleSearchSubmit}>
-                  <div className="search-field">
-                    <svg className="search-field-icon" viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L5.05 4.05zM4.343 4.343a7 7 0 1011.314 0L4.343 4.343z"/>
-                    </svg>
-                    <input
-                      type="text"
-                      placeholder="Enter location, landmark or project name"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="search-input"
-                    />
-                  </div>
-                  <Button type="submit" size="large" className="search-button">
-                    <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
-                      <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
-                    </svg>
-                    Search Properties
-                  </Button>
-                </form>
-              </div>
-            </div>
+            </form>
             
             <div className="home-hero__quick-links">
-              <a href="/properties?type=apartment" className="home-hero__quick-link">Luxury Apartments</a>
-              <a href="/properties?type=villa" className="home-hero__quick-link">Modern Villas</a>
-              <a href="/properties?location=central" className="home-hero__quick-link">Central Locations</a>
+              <a href="/projects?search=apartment" className="home-hero__quick-link">Luxury Apartments</a>
+              <a href="/projects?search=villa" className="home-hero__quick-link">Modern Villas</a>
+              <a href="/projects?search=central" className="home-hero__quick-link">Central Locations</a>
             </div>
           </div>
         </div>
@@ -243,99 +226,34 @@ const Home = () => {
                 </p>
               </div>
               <div className="section-header__actions">
-                <Button href="/projects" onClick={() => Navigate('/projects')} variant="outline">
+                <Button href="/projects" onClick={() => navigate('/projects')} variant="outline">
                   View All Projects
-                  <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/>
-                  </svg>
                 </Button>
               </div>
             </div>
             
             <ProjectList
-              projects={featuredProjects}
-              emptyMessage={
-                <div className="empty-projects">
-                  <div className="empty-projects__icon">
-                    <svg viewBox="0 0 20 20" width="64" height="64" fill="currentColor">
-                      <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
-                    </svg>
-                  </div>
-                  <h3>No Projects Available</h3>
-                  <p>New developer projects will be added soon. Check back later.</p>
-                  <Button href="/projects" variant="outline">
-                    Explore All Projects
-                  </Button>
+            projects={featuredProjects}
+            onProjectClick={handleProjectClick} // Add this line
+            emptyMessage={
+              <div className="empty-projects">
+                <div className="empty-projects__icon">
+                  <svg viewBox="0 0 20 20" width="64" height="64" fill="currentColor">
+                    <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
+                  </svg>
                 </div>
-              }
-              showLoadMore={false}
-            />
+                <h3>No Projects Available</h3>
+                <p>New developer projects will be added soon. Check back later.</p>
+                <Button href="/projects" variant="outline">
+                  Explore All Projects
+                </Button>
+              </div>
+            }
+            showLoadMore={false}
+          />
           </div>
         </section>
       )}
-
-      {/* Featured/Recent Properties Section */}
-      <section className="featured-properties">
-        <div className="container">
-          <div className="section-header">
-            <div className="section-header__content">
-              <div className="section-badge">
-                {isShowingFeatured ? 'Handpicked Selection' : 'Latest Listings'}
-              </div>
-              <h2 className="section-title">
-                {isShowingFeatured ? 'Featured Premium Properties' : 'Recently Added Properties'}
-              </h2>
-              <p className="section-description">
-                {isShowingFeatured 
-                  ? 'Exclusive collection of premium properties that define luxury and sophistication' 
-                  : 'Discover the newest additions to our premium property portfolio'
-                }
-              </p>
-            </div>
-            <div className="section-header__actions">
-              <Button href="/properties" variant="outline">
-                View All Properties
-                <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/>
-                </svg>
-              </Button>
-            </div>
-          </div>
-          
-          {isLoading ? (
-            <div className="home-loading">
-              <Spinner size="large" />
-            </div>
-          ) : error ? (
-            <div className="home-error">
-              <p className="home-error__message">{error}</p>
-              <Button onClick={() => window.location.reload()}>
-                Try Again
-              </Button>
-            </div>
-          ) : (
-            <>
-              <PropertyList
-                properties={featuredProperties}
-                emptyMessage={
-                  isShowingFeatured
-                    ? "Currently no featured properties available"
-                    : "No recent listings at this time"
-                }
-                showLoadMore={false}
-              />
-              
-              {featuredProperties.length > 0 && (
-                <div className="home-properties__view-all">
-                  <Button href="/properties" variant="outline" size="large">
-                    Browse All Properties
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="home-cta">
@@ -346,21 +264,30 @@ const Home = () => {
               Our team is ready to provide expert guidance tailored to your needs
             </p>
             <div className="home-cta__buttons">
-              <Button href="/properties" size="large" className="home-cta__button">
+              <button 
+                onClick={() => navigate('/properties')} 
+                className="home-cta__button"
+              >
                 Explore Properties
-              </Button>
-              <Button href="/projects" size="large" className="cta__secondary-button">
+              </button>
+              <button 
+                onClick={() => navigate('/projects')} 
+                className="home-cta__button cta__secondary-button"
+              >
                 View Developer Projects
                 <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
                   <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/>
                 </svg>
-              </Button>
-              <Button href="/contact" variant="outline" size="large" className="cta__tertiary-button">
+              </button>
+              <button 
+                onClick={() => navigate('/contact')} 
+                className="home-cta__button cta__tertiary-button"
+              >
                 Schedule Consultation
                 <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"/>
                 </svg>
-              </Button>
+              </button>
             </div>
           </div>
         </div>

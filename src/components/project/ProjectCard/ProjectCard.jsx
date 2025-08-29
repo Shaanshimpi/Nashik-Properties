@@ -53,14 +53,14 @@ const ProjectCard = ({
             <div className="project-card__price-range">
               <span className="project-card__price-label">Price Range:</span>
               <span className="project-card__price-amount">
-                ₹{project.display_price}
+                {project.display_price}
               </span>
             </div>
           ) : (
             <div className="project-card__single-price">
               <span className="project-card__price-label">Price:</span>
               <span className="project-card__price-amount">
-                ₹{project.display_price}
+                {project.display_price}
               </span>
             </div>
           )}
