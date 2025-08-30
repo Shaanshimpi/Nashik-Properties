@@ -1,1 +1,1 @@
-Nashik property
+Nashik properties
