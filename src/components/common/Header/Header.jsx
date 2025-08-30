@@ -64,7 +64,7 @@ const Header = () => {
                 alt="Nashik Properties Club" 
                 className="header__logo-image"
               />
-              <span>Nashik Properties Club</span>
+              <span>Nashik Property Club</span>
             </Link>
           </div>
 

@@ -5,6 +5,69 @@ import { useProducts } from '../../hooks/useProducts';
 import ProjectGallery from '../../components/project/ProjectGallery/ProjectGallery';
 import './ProjectSingle.css';
 
+const ProjectHeroHeader = ({ currentProduct, loading }) => {
+  const heroImage = currentProduct?.images?.[0]?.src;
+  const projectName = currentProduct?.name || 'Premium Residential Project';
+  
+  if (loading) {
+    return (
+      <div className="project-single__hero project-single__hero--loading">
+        <div className="project-single__hero-content">
+          <div style={{ height: '60px', background: 'rgba(255,255,255,0.2)', borderRadius: '8px', marginBottom: '2rem' }}></div>
+          <div style={{ height: '120px', background: 'rgba(255,255,255,0.2)', borderRadius: '12px', marginBottom: '1rem' }}></div>
+          <div style={{ height: '40px', background: 'rgba(255,255,255,0.2)', borderRadius: '20px', width: '300px' }}></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="project-single__hero">
+      <div className="project-single__hero-content">
+        <nav className="project-single__hero-breadcrumb" aria-label="Breadcrumb">
+          <a href="/" aria-label="Go to homepage">Home</a>
+          <span className="project-single__breadcrumb-divider" aria-hidden="true">/</span>
+          <a href="/projects" aria-label="Browse all projects">Projects</a>
+          <span className="project-single__breadcrumb-divider" aria-hidden="true">/</span>
+          <span aria-current="page">{projectName}</span>
+        </nav>
+        
+        <h1 className="project-single__hero-title">
+          {projectName}
+        </h1>
+        
+        <div className="project-single__hero-meta">
+          {currentProduct?.featured && (
+            <span className="project-single__hero-badge" role="badge">
+              Featured Project
+            </span>
+          )}
+          
+          <div className="project-single__hero-location">
+            <svg 
+              width="18" 
+              height="18" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path 
+                d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" 
+                fill="currentColor"
+              />
+            </svg>
+            <span>Nashik, Maharashtra</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="project-single__hero-bg" aria-hidden="true"></div>
+      <div className="project-single__hero-overlay" aria-hidden="true"></div>
+    </div>
+  );
+};
+
 const ProjectSingle = () => {
   const { id } = useParams();
   const { currentProduct, loading, error, fetchProductWithVariations } = useProducts();
@@ -154,7 +217,7 @@ const ProjectSingle = () => {
     if (parsedDescription.keyFeatures.length > 0) tabs.push({ key: 'features', label: 'Key Features', icon: '✨' });
     if (parsedDescription.amenities.length > 0) tabs.push({ key: 'amenities', label: 'Amenities', icon: '🏢' });
     if (parsedDescription.locationHighlights.length > 0) tabs.push({ key: 'location', label: 'Location', icon: '📍' });
-    if (parsedDescription.address) tabs.push({ key: 'address', label: 'Address', icon: '📧' });
+    if (parsedDescription.address) tabs.push({ key: 'address', label: 'Address', icon: '🏡' });
     if (parsedDescription.rentInfo) tabs.push({ key: 'pricing', label: 'Pricing', icon: '💰' });
     
     return tabs;
@@ -163,6 +226,7 @@ const ProjectSingle = () => {
   if (loading) {
     return (
       <div className="project-single">
+        <ProjectHeroHeader currentProduct={null} loading={true} />
         <div className="project-single__skeleton">
           <div className="project-single__skeleton-gallery"></div>
           <div className="project-single__skeleton-content">
@@ -204,6 +268,9 @@ const ProjectSingle = () => {
 
   return (
     <div className="project-single">
+      {/* Enhanced Hero Header */}
+      <ProjectHeroHeader currentProduct={currentProduct} loading={false} />
+      
       <div className="project-single__gallery">
         <ProjectGallery images={currentProduct.images} />
       </div>
@@ -255,7 +322,10 @@ const ProjectSingle = () => {
               {activeTab === 'overview' && parsedDescription.overview && (
                 <div className="tab-content-panel">
                   <div className="project-overview">
-                    <h3 className="section-title">Project Overview</h3>
+                    <h3 className="section-title">
+                      <span className="section-title-icon">🏠</span>
+                      Project Overview
+                    </h3>
                     <p className="overview-text">{parsedDescription.overview}</p>
                   </div>
                 </div>
@@ -263,12 +333,17 @@ const ProjectSingle = () => {
 
               {activeTab === 'features' && parsedDescription.keyFeatures.length > 0 && (
                 <div className="tab-content-panel">
-                  <h3 className="section-title">Key Features</h3>
+                  <h3 className="section-title">
+                    <span className="section-title-icon">✨</span>
+                    Key Features
+                  </h3>
                   <div className="features-grid">
                     {parsedDescription.keyFeatures.map((feature, index) => (
                       <div key={index} className="feature-item">
                         <span className="feature-icon">✓</span>
-                        <span className="feature-text">{feature}</span>
+                        <div className="feature-content">
+                          <span className="feature-text">{feature}</span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -277,7 +352,10 @@ const ProjectSingle = () => {
 
               {activeTab === 'amenities' && parsedDescription.amenities.length > 0 && (
                 <div className="tab-content-panel">
-                  <h3 className="section-title">World-Class Amenities</h3>
+                  <h3 className="section-title">
+                    <span className="section-title-icon">🏢</span>
+                    World-Class Amenities
+                  </h3>
                   <div className="amenities-grid">
                     {parsedDescription.amenities.map((amenity, index) => (
                       <div key={index} className="amenity-item">
@@ -291,12 +369,17 @@ const ProjectSingle = () => {
 
               {activeTab === 'location' && parsedDescription.locationHighlights.length > 0 && (
                 <div className="tab-content-panel">
-                  <h3 className="section-title">Location Highlights</h3>
+                  <h3 className="section-title">
+                    <span className="section-title-icon">📍</span>
+                    Location Highlights
+                  </h3>
                   <div className="location-grid">
                     {parsedDescription.locationHighlights.map((highlight, index) => (
                       <div key={index} className="location-item">
                         <span className="location-icon">📍</span>
-                        <span className="location-text">{highlight}</span>
+                        <div className="location-content">
+                          <span className="location-text">{highlight}</span>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -305,11 +388,17 @@ const ProjectSingle = () => {
 
               {activeTab === 'address' && parsedDescription.address && (
                 <div className="tab-content-panel">
-                  <h3 className="section-title">Property Address</h3>
+                  <h3 className="section-title">
+                    <span className="section-title-icon">🏡</span>
+                    Property Address
+                  </h3>
                   <div className="address-info">
-                    <div className="address-card">
-                      <span className="address-icon">🏠</span>
-                      <p className="address-text">{parsedDescription.address}</p>
+                    <div className="info-card address-card">
+                      <span className="info-icon address-icon">🏠</span>
+                      <div className="info-content">
+                        <h4 className="info-title">Address</h4>
+                        <p className="info-text">{parsedDescription.address}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -317,11 +406,17 @@ const ProjectSingle = () => {
 
               {activeTab === 'pricing' && parsedDescription.rentInfo && (
                 <div className="tab-content-panel">
-                  <h3 className="section-title">Pricing Information</h3>
+                  <h3 className="section-title">
+                    <span className="section-title-icon">💰</span>
+                    Pricing Information
+                  </h3>
                   <div className="pricing-info">
-                    <div className="pricing-card">
-                      <span className="pricing-icon">💰</span>
-                      <p className="pricing-text">{parsedDescription.rentInfo}</p>
+                    <div className="info-card pricing-card">
+                      <span className="info-icon pricing-icon">💰</span>
+                      <div className="info-content">
+                        <h4 className="info-title">Pricing Details</h4>
+                        <p className="info-text">{parsedDescription.rentInfo}</p>
+                      </div>
                     </div>
                   </div>
                 </div>

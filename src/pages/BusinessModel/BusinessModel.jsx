@@ -139,6 +139,60 @@ const BusinessModel = () => {
               </div>
             </div>
           </section>
+
+          {/* Support System Section */}
+          <section className="business-model-page__section business-model-page__section--alt">
+            <div className="business-model-page__section-header">
+              <h2>Support System</h2>
+              <p>Comprehensive networking and authority structure for success</p>
+            </div>
+
+            <div className="business-model-page__support-content">
+              <div className="business-model-page__support-intro">
+                <h3>Networking Support System</h3>
+                <p>Our structured support system ensures seamless communication and accountability from top to bottom and bottom to top, creating a robust framework for success.</p>
+              </div>
+
+              {/* <div className="business-model-page__support-features">
+                <div className="business-model-page__support-feature">
+                  <div className="business-model-page__support-icon">🔄</div>
+                  <h4>Two-Way Communication</h4>
+                  <p>Clear channels for feedback and guidance flowing in both directions throughout the organization.</p>
+                </div>
+
+                <div className="business-model-page__support-feature">
+                  <div className="business-model-page__support-icon">📊</div>
+                  <h4>Structured Hierarchy</h4>
+                  <p>Well-defined roles and responsibilities with accountability at every level of the organization.</p>
+                </div>
+
+                <div className="business-model-page__support-feature">
+                  <div className="business-model-page__support-icon">🤝</div>
+                  <h4>Collaborative Network</h4>
+                  <p>Strong connections between all stakeholders - from leadership to new members.</p>
+                </div>
+
+                <div className="business-model-page__support-feature">
+                  <div className="business-model-page__support-icon">🚀</div>
+                  <h4>Growth Framework</h4>
+                  <p>Systems designed to support individual growth while maintaining organizational cohesion.</p>
+                </div>
+              </div> */}
+
+              {/* <div className="business-model-page__authority-structure">
+                <h3>Authority & Responsibilities</h3>
+                <p>Our support system follows a clear hierarchy that ensures:</p>
+                <ul>
+                  <li>Clear delegation of tasks and decision-making power</li>
+                  <li>Accountability at every level of the organization</li>
+                  <li>Support flowing from experienced members to newcomers</li>
+                  <li>Feedback channels from grassroots to leadership</li>
+                  <li>Mentorship programs for professional development</li>
+                  <li>Regular training and skill enhancement sessions</li>
+                </ul>
+              </div> */}
+            </div>
+          </section>
         </div>
       </div>
     </>
