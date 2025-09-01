@@ -168,11 +168,11 @@ const Home = () => {
               </div>
             </form>
             
-            <div className="home-hero__quick-links">
+            {/* <div className="home-hero__quick-links">
               <a href="/projects?search=apartment" className="home-hero__quick-link">Luxury Apartments</a>
               <a href="/projects?search=villa" className="home-hero__quick-link">Modern Villas</a>
               <a href="/projects?search=central" className="home-hero__quick-link">Central Locations</a>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
@@ -264,12 +264,12 @@ const Home = () => {
               Our team is ready to provide expert guidance tailored to your needs
             </p>
             <div className="home-cta__buttons">
-              <button 
+              {/* <button 
                 onClick={() => navigate('/properties')} 
                 className="home-cta__button"
               >
                 Explore Properties
-              </button>
+              </button> */}
               <button 
                 onClick={() => navigate('/projects')} 
                 className="home-cta__button cta__secondary-button"

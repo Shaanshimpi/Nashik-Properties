@@ -18,7 +18,7 @@ const About = () => {
       <div className="about-page">
         <div className="container">
           <div className="about-hero">
-            <h1>About Nashik Properties</h1>
+            <h1>About Us</h1>
             <p className="about-hero__subtitle">
               Your trusted partner in finding the perfect property
             </p>
@@ -36,11 +36,16 @@ const About = () => {
             </div>
 
             <div className="about-section">
+              <h2>Our Vision</h2>
+              <p>
+                To build a strong team that empowers the community lifestyle by sharing knowledge and fulfilling the basic need of homes for people contributing to the nation.
+              </p>
+            </div>
+
+            <div className="about-section">
               <h2>Our Mission</h2>
               <p>
-                To provide transparent, efficient, and personalized real estate services 
-                that exceed our clients' expectations. We believe in building long-term 
-                relationships based on trust, integrity, and results.
+                To empower the lifestyle of over 10,000 people every year by helping them participate in a wealth-building journey through sole selling of property, education, and community collaboration.
               </p>
             </div>
 

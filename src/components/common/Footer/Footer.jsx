@@ -7,7 +7,7 @@ const Footer = () => {
 
   const quickLinks = [
     { path: '/', label: 'Home' },
-    { path: '/properties', label: 'Properties' },
+    { path: '/projects', label: 'Projects' },
     { path: '/about', label: 'About Us' },
     { path: '/contact', label: 'Contact' }
   ];
@@ -27,7 +27,7 @@ const Footer = () => {
           <div className="footer__section">
             <div className="footer__logo">
               <Link to="/" className="footer__logo-link">
-                <span className="footer__logo-text">RealtyHome</span>
+                <span className="footer__logo-text">Nashik Property Club</span>
               </Link>
             </div>
             <p className="footer__description">

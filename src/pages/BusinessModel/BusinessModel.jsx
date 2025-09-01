@@ -153,7 +153,7 @@ const BusinessModel = () => {
                 <p>Our structured support system ensures seamless communication and accountability from top to bottom and bottom to top, creating a robust framework for success.</p>
               </div>
 
-              {/* <div className="business-model-page__support-features">
+              <div className="business-model-page__support-features">
                 <div className="business-model-page__support-feature">
                   <div className="business-model-page__support-icon">🔄</div>
                   <h4>Two-Way Communication</h4>
@@ -177,9 +177,9 @@ const BusinessModel = () => {
                   <h4>Growth Framework</h4>
                   <p>Systems designed to support individual growth while maintaining organizational cohesion.</p>
                 </div>
-              </div> */}
+              </div>
 
-              {/* <div className="business-model-page__authority-structure">
+              <div className="business-model-page__authority-structure">
                 <h3>Authority & Responsibilities</h3>
                 <p>Our support system follows a clear hierarchy that ensures:</p>
                 <ul>
@@ -190,7 +190,7 @@ const BusinessModel = () => {
                   <li>Mentorship programs for professional development</li>
                   <li>Regular training and skill enhancement sessions</li>
                 </ul>
-              </div> */}
+              </div>
             </div>
           </section>
         </div>

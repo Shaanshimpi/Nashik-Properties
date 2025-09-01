@@ -460,10 +460,11 @@
   
   .contact-page__title {
     font-size: 3rem;
+    margin-top: 40px;
   }
   
   .contact-page__subtitle {
-    font-size: 1.3rem;
+    font-size: 0.9rem;
   }
   
   .contact-page__content {
@@ -511,10 +512,11 @@
   
   .contact-page__title {
     font-size: 2.5rem;
+    margin-top: 40px;
   }
   
   .contact-page__subtitle {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
   }
   
   .contact-page__info,
