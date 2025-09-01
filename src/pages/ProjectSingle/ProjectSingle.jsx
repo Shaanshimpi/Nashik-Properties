@@ -5,6 +5,9 @@ import { useProducts } from '../../hooks/useProducts';
 import ProjectGallery from '../../components/project/ProjectGallery/ProjectGallery';
 import './ProjectSingle.css';
 
+// WhatsApp configuration - Update this with your actual WhatsApp number
+const WHATSAPP_NUMBER = '919322076796'; // Replace with your WhatsApp number (with country code, no + sign)
+
 const ProjectHeroHeader = ({ currentProduct, loading }) => {
   const heroImage = currentProduct?.images?.[0]?.src;
   const projectName = currentProduct?.name || 'Premium Residential Project';
@@ -75,6 +78,40 @@ const ProjectSingle = () => {
   const [selectedVariationDescription, setSelectedVariationDescription] = useState('');
   const [parsedDescription, setParsedDescription] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
+
+  // WhatsApp message generation function
+  const generateWhatsAppMessage = (variation = null) => {
+    const projectName = currentProduct?.name || 'Property';
+    const projectUrl = window.location.href;
+    
+    let message = `Hello! I'm interested in ${projectName} in Nashik, Maharashtra.`;
+    
+    if (variation) {
+      const configDetails = variation.attributes.map(attr => attr.option).join(' • ');
+      const price = variation.on_sale ? variation.price : variation.regular_price;
+      message += `\n\nConfiguration: ${configDetails}`;
+      message += `\nPrice: ₹${Number(price).toLocaleString('en-IN')}`;
+    } else {
+      if (currentProduct?.display_price) {
+        message += `\nPrice: ${currentProduct.display_price}`;
+      }
+    }
+    
+    message += `\n\nCould you please provide more details and arrange a site visit?`;
+    message += `\n\nProject Link: ${projectUrl}`;
+    
+    return message;
+  };
+
+  // WhatsApp redirect function
+  const openWhatsApp = (variation = null) => {
+    const message = generateWhatsAppMessage(variation);
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    
+    // Open WhatsApp in a new tab/window
+    window.open(whatsappUrl, '_blank');
+  };
 
   // Enhanced description parsing function
   const parseDescription = (description) => {
@@ -492,7 +529,13 @@ const ProjectSingle = () => {
                       )}
                     </div>
                     <div className="variation-card__actions">
-                      <button className="variation-card__cta">
+                      <button 
+                        className="variation-card__cta"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent triggering the card click
+                          openWhatsApp(variation);
+                        }}
+                      >
                         Enquire Now
                       </button>
                     </div>
@@ -504,10 +547,16 @@ const ProjectSingle = () => {
         )}
         
         <div className="project-single__actions">
-          <button className="project-single__cta-button">
+          <button 
+            className="project-single__cta-button"
+            onClick={() => openWhatsApp()}
+          >
             Schedule Site Visit
           </button>
-          <button className="project-single__secondary-button">
+          <button 
+            className="project-single__secondary-button"
+            onClick={() => openWhatsApp()}
+          >
             Download Brochure
           </button>
         </div>
