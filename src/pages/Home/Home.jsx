@@ -6,6 +6,7 @@ import ProjectList from '../../components/project/ProjectList/ProjectList';
 import PropertyCard from '../../components/property/PropertyCard/PropertyCard';
 import Button from '../../components/ui/Button/Button';
 import Spinner from '../../components/common/Loading/Spinner';
+import logo from '../../assets/logo/npc-logo.png';
 import './Home.css';
 
 const handleProjectClick = (project) => {
@@ -140,42 +141,62 @@ const Home = () => {
     <>
       {/* Hero Section */}
       <section className="home-hero">
-        <div className="home-hero__content container">
-          <div className="home-hero__text">
-            <h1 className="home-hero__title">
-              <span className="home-hero__title-line">Discover Your</span>
-              <span className="home-hero__title-highlight">Perfect Property</span>
-            </h1>
-            <p className="home-hero__description">
-              Premium real estate services with personalized attention and exclusive listings
-            </p>
+      <div className="home-hero__content container">
+        <div className="home-hero__text">
+          <h1 className="home-hero__title">
+            <span className="home-hero__title-line">Discover Your</span>
+            <span className="home-hero__title-highlight">Perfect Property</span>
+          </h1>
+          <p className="home-hero__description">
+            Premium real estate services with personalized attention and exclusive listings
+          </p>
+          
+          <form className="home-hero__search" onSubmit={handleSearchSubmit}>
+            <div className="home-hero__search-container">
+              <input
+                type="text"
+                placeholder="Search projects by location, type, or features..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="home-hero__search-input"
+              />
+              <button type="submit" className="home-hero__search-button">
+                <span>Search</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Premium Logo Section */}
+        <div className="home-hero__logo">
+          <div className="hero-logo">
+            <div className="hero-logo__floating-elements">
+              <div className="floating-element"></div>
+              <div className="floating-element"></div>
+              <div className="floating-element"></div>
+            </div>
             
-            <form className="home-hero__search" onSubmit={handleSearchSubmit}>
-              <div className="home-hero__search-container">
-                <input
-                  type="text"
-                  placeholder="Search projects by location, type, or features..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="home-hero__search-input"
-                />
-                <button type="submit" className="home-hero__search-button">
-                  <span>Search</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
+            <div className="hero-logo__content">
+              <div className="hero-logo__icon">
+                <img 
+                src={logo} 
+                alt="Nashik Property Club" 
+                className="hero__logo-image"
+              />
               </div>
-            </form>
-            
-            {/* <div className="home-hero__quick-links">
-              <a href="/projects?search=apartment" className="home-hero__quick-link">Luxury Apartments</a>
-              <a href="/projects?search=villa" className="home-hero__quick-link">Modern Villas</a>
-              <a href="/projects?search=central" className="home-hero__quick-link">Central Locations</a>
-            </div> */}
+              
+              <div className="hero-logo__text">
+                <h3 className="hero-logo__title">Nashik Property Club</h3>
+                <p className="hero-logo__tagline">Premium Real Estate</p>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* Stats Section */}
       <section className="home-stats">
