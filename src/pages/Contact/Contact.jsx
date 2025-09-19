@@ -77,7 +77,8 @@ const Contact = () => {
                 <div className="contact-page__detail-icon">📞</div>
                 <div>
                   <h3>Phone</h3>
-                  <p>+91 XXXX-XXXX-XX</p>
+                  <p>+91 90284 19195</p>
+                  <p>+91 82751 15557</p>
                 </div>
               </div>
               <div className="contact-page__detail">
@@ -91,7 +92,7 @@ const Contact = () => {
                 <div className="contact-page__detail-icon">📍</div>
                 <div>
                   <h3>Office</h3>
-                  <p>123 Real Estate Street<br />Nashik, Maharashtra, India</p>
+                  <p>Nashik Property Club ,Pandit Colony, Opp. Kulkarni Garden,<br/>Nashik, Maharashtra, India</p>
                 </div>
               </div>
             </div>
