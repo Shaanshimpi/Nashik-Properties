@@ -72,20 +72,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Property Types */}
-          {/* <div className="footer__section">
-            <h4 className="footer__section-title">Property Types</h4>
-            <ul className="footer__links">
-              {propertyTypes.map((type) => (
-                <li key={type.path} className="footer__link-item">
-                  <Link to={type.path} className="footer__link">
-                    {type.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div> */}
-
           {/* Contact Info */}
           <div className="footer__section">
             <h4 className="footer__section-title">Contact Info</h4>
@@ -94,29 +80,74 @@ const Footer = () => {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                 </svg>
-                <span>123 Main Street, Nashik, Maharashtra</span>
+                <span>Nashik Property Club, Pandit Colony, Opp. Kulkarni Garden, Nashik, Maharashtra - 422005.</span>
               </div>
               <div className="footer__contact-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
                 </svg>
-                <span>+91 12345 67890</span>
+                <a href="tel:+919028419195">+91 90284 19195</a>
+              </div>
+              <div className="footer__contact-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                <a href="tel:+918275115557">+91 82751 15557</a>
               </div>
               <div className="footer__contact-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                 </svg>
-                <span>info@realtyhome.com</span>
+                <a href="mailto:info@realtyhome.com">info@realtyhome.com</a>
               </div>
             </div>
           </div>
+        </div>
+        
+        {/* Map Section */}
+        <div className="map-section">
+          <div className="map-frame">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3749.1361430189804!2d73.77142717522906!3d20.002799981402017!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjDCsDAwJzEwLjEiTiA3M8KwNDYnMjYuNCJF!5e0!3m2!1sen!2sin!4v1758280809414!5m2!1sen!2sin" 
+            width="600" 
+            height="450" 
+            style={{border: 0}}
+            allowFullScreen="" 
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            title="Nashik Property Club Location"></iframe>
+          </div>
+
+          <div className="map-overlays">
+            <div className="location-marker">
+              <div className="marker-ripple"></div>
+              <div className="marker-ripple ripple-2"></div>
+            </div>
+            <div className="corner-decoration top-left"></div>
+            <div className="corner-decoration top-right"></div>
+            <div className="corner-decoration bottom-left"></div>
+            <div className="corner-decoration bottom-right"></div>
+          </div>
+
+          <a 
+            href="https://maps.app.goo.gl/YcTwJmDFCaGZqjWZ9" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="premium-map-btn"
+          >
+            <div className="btn-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            </div>
+            <span>Open in Maps</span>
+            <div className="btn-glow"></div>
+          </a>
         </div>
 
         {/* Bottom Bar */}
         <div className="footer__bottom">
           <div className="footer__bottom-content">
             <p className="footer__copyright">
-              © {currentYear} RealtyHome. All rights reserved.
+              © {currentYear} Nashik Property Club. All rights reserved.
             </p>
             <div className="footer__bottom-links">
               <Link to="/privacy" className="footer__bottom-link">Privacy Policy</Link>

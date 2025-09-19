@@ -28,10 +28,12 @@ const About = () => {
             <div className="about-section">
               <h2>Our Story</h2>
               <p>
-                Founded with a vision to transform the real estate experience in Nashik, 
-                we have been helping families and investors find their perfect properties 
-                for over a decade. Our deep understanding of the local market, combined 
-                with modern technology, ensures you get the best deals and service.
+                Founded with a vision to transform the real estate experience in Nashik,
+                we have been helping families and investors find their perfect properties for over a decade.
+                Backed by 25 years of expertise in engineering consulting and construction,
+                we have successfully completed more than 500 projects and served over 500 satisfied customers.
+                Our track record includes numerous property deals, all driven by a technically strong and collaborative team.
+                We believe our network is our true net worth, and we leverage it to deliver the best deals and unmatched service.
               </p>
             </div>
 
