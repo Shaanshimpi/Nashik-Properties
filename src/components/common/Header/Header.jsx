@@ -6,17 +6,30 @@ import logo from '../../../assets/logo/npc-logo.png';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
 
-  // Handle scroll effect
+  // Handle mobile detection and scroll effect
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       setIsScrolled(scrollTop > 50);
     };
 
+    // Initial check
+    handleResize();
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   // Close mobile menu when route changes
@@ -47,9 +60,9 @@ const Header = () => {
   const navigationItems = [
     { path: '/', label: 'Home' },
     { path: '/projects', label: 'Projects' },
-    { path: '/about', label: 'About' },
+    { path: '/about', label: 'About Us' },
     { path: '/business-model', label: 'Business Model'},
-    { path: '/contact', label: 'Contact' }
+    { path: '/contact', label: 'Contact Us' }
   ];
 
   return (
@@ -64,6 +77,7 @@ const Header = () => {
                 alt="Nashik Properties Club" 
                 className="header__logo-image"
               />
+              {/* <span>{isMobile ? 'NPC' : 'Nashik Property Club'}</span> */}
               <span>Nashik Property Club</span>
             </Link>
           </div>

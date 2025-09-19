@@ -672,6 +672,17 @@ p {
   .hero-logo__tagline {
     font-size: 9px;
   }
+
+  .home-hero__search-button {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+    gap: 0.25rem;
+  }
+  
+  .home-hero__search-button svg {
+    height: 12px;
+    width: 12px;
+  }
 }
 
 /* Animation adjustments for mobile */
@@ -1685,6 +1696,21 @@ p {
     max-width: 300px;
     width: 100%;
   }
+
+  .home-hero__search-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .home-hero__search-button svg {
+    height: 16px;
+    width: 16px;
+  }
+  
+  .home-hero__search-input {
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+  }
   
   .featured-projects {
     padding: 60px 0;
@@ -1749,6 +1775,22 @@ p {
   
   .home-cta__title {
     font-size: 1.8rem;
+  }
+
+  .home-hero__search-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    right: 3px;
+  }
+  
+  .home-hero__search-button svg {
+    height: 14px;
+    width: 14px;
+  }
+  
+  .home-hero__search-input {
+    padding: 0.875rem 1rem;
+    font-size: 0.8rem;
   }
   
   .section-badge {

@@ -77,7 +77,7 @@ const Contact = () => {
                 <div className="contact-page__detail-icon">📞</div>
                 <div>
                   <h3>Phone</h3>
-                  <p>+91 90284 19195</p>
+                  <p>+91 90284 19695</p>
                   <p>+91 82751 15557</p>
                 </div>
               </div>
