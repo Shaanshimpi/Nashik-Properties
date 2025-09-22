@@ -147,7 +147,7 @@ const Footer = () => {
         <div className="footer__bottom">
           <div className="footer__bottom-content">
             <p className="footer__copyright">
-              © {currentYear} Nashik Property Club. All rights reserved.
+            Created and Developed by <a href="https://performance.digitalsupremacy.in/">Digital Supremacy</a> & <a href="https://firefist.co.in/">Firefist Solutions</a>  © {currentYear} Nashik Property Club. All rights reserved.
             </p>
             <div className="footer__bottom-links">
               <Link to="/privacy" className="footer__bottom-link">Privacy Policy</Link>

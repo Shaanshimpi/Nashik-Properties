@@ -113,25 +113,30 @@ const ProjectSingle = () => {
     window.open(whatsappUrl, '_blank');
   };
 
-  // Enhanced description parsing function
-  const parseDescription = (description) => {
-    if (!description) return null;
+  // Enhanced description parsing function that preserves HTML links
+  // Enhanced description parsing function that preserves HTML links
+const parseDescription = (description) => {
+  if (!description) return null;
 
-    // Convert HTML to text
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = description;
-    const textContent = tempDiv.textContent || tempDiv.innerText || '';
-
+  try {
     const sections = {
       overview: '',
+      overviewHtml: '', // Add HTML version
       keyFeatures: [],
+      keyFeaturesHtml: [], // Add HTML version
       amenities: [],
+      amenitiesHtml: [], // Add HTML version
       locationHighlights: [],
+      locationHighlightsHtml: [], // Add HTML version
       rentInfo: '',
-      address: ''
+      rentInfoHtml: '', // Add HTML version
+      address: '',
+      addressHtml: '', // Store raw HTML for address section
+      mapLink: ''
     };
 
-    const lines = textContent.split('\n')
+    // Work with the raw HTML description to preserve links
+    const lines = description.split('\n')
       .map(line => line.trim())
       .filter(line => line && line.length > 1);
 
@@ -140,9 +145,13 @@ const ProjectSingle = () => {
     let overviewLineCount = 0;
 
     lines.forEach((line, index) => {
-      const lowerLine = line.toLowerCase();
+      // Create a text-only version for section detection
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = line;
+      const textLine = tempDiv.textContent || tempDiv.innerText || '';
+      const lowerLine = textLine.toLowerCase();
       
-      // Section detection
+      // Enhanced section detection with more patterns
       if (lowerLine.includes('key features:') || lowerLine.includes('features:')) {
         currentSection = 'keyFeatures';
         collectingItems = true;
@@ -155,50 +164,224 @@ const ProjectSingle = () => {
         currentSection = 'locationHighlights';
         collectingItems = true;
         return;
-      } else if (lowerLine.includes('address:') || line.includes('📍')) {
+      } else if (
+        lowerLine.includes('address:') || 
+        textLine.includes('📍') || 
+        lowerLine.includes('**address:**') ||
+        lowerLine.startsWith('📍') ||
+        line.includes('Google Maps:') ||
+        line.includes('google maps:')
+      ) {
         currentSection = 'address';
         collectingItems = false;
         return;
-      } else if (lowerLine.includes('rent:') || lowerLine.includes('price:')) {
+      } else if (lowerLine.includes('rent:') || lowerLine.includes('price:') || lowerLine.includes('💰') || lowerLine.includes('pricing details:')) {
         currentSection = 'rentInfo';
         collectingItems = false;
         return;
       }
 
-      // Content allocation
+      // Check for Google Maps link pattern in the raw HTML
+      if (line.includes('maps.app.goo.gl') || line.includes('View on Google Maps')) {
+        sections.mapLink = line;
+        return;
+      }
+
+      // Content allocation - preserve HTML for ALL sections
       if (currentSection === 'overview' && overviewLineCount < 3) {
-        sections.overview += line + ' ';
+        sections.overview += textLine + ' ';
+        sections.overviewHtml += line + ' '; // Store HTML version
         overviewLineCount++;
       } else if (currentSection === 'keyFeatures' && collectingItems) {
-        if (line && !lowerLine.includes('key features:') && !lowerLine.includes('features:')) {
-          sections.keyFeatures.push(line);
+        if (textLine && !lowerLine.includes('key features:') && !lowerLine.includes('features:')) {
+          sections.keyFeatures.push(textLine);
+          sections.keyFeaturesHtml.push(line); // Store HTML version
         }
       } else if (currentSection === 'amenities' && collectingItems) {
-        if (line && !lowerLine.includes('amenities:')) {
-          sections.amenities.push(line);
+        if (textLine && !lowerLine.includes('amenities:')) {
+          sections.amenities.push(textLine);
+          sections.amenitiesHtml.push(line); // Store HTML version
         }
       } else if (currentSection === 'locationHighlights' && collectingItems) {
-        if (line && !lowerLine.includes('location')) {
-          sections.locationHighlights.push(line);
+        if (textLine && !lowerLine.includes('location')) {
+          sections.locationHighlights.push(textLine);
+          sections.locationHighlightsHtml.push(line); // Store HTML version
         }
       } else if (currentSection === 'address' && !collectingItems) {
-        if (line && !lowerLine.includes('address:') && !line.includes('📍')) {
-          sections.address += line + ' ';
+        if (
+          line && 
+          !lowerLine.includes('address:') && 
+          !textLine.includes('📍') &&
+          !lowerLine.includes('**address:**')
+        ) {
+          // Store both text and HTML versions for the address
+          sections.address += textLine + ' ';
+          sections.addressHtml += line + ' ';
         }
       } else if (currentSection === 'rentInfo' && !collectingItems) {
-        if (line && !lowerLine.includes('rent:') && !lowerLine.includes('price:')) {
-          sections.rentInfo += line + ' ';
+        if (textLine && !lowerLine.includes('rent:') && !lowerLine.includes('price:') && !lowerLine.includes('💰') && !lowerLine.includes('pricing details:')) {
+          sections.rentInfo += textLine + ' ';
+          sections.rentInfoHtml += line + ' '; // Store HTML version
         }
       }
     });
 
     // Clean up sections
     sections.overview = sections.overview.trim();
+    sections.overviewHtml = sections.overviewHtml.trim();
     sections.address = sections.address.trim();
+    sections.addressHtml = sections.addressHtml.trim();
     sections.rentInfo = sections.rentInfo.trim();
+    sections.rentInfoHtml = sections.rentInfoHtml.trim();
+    sections.mapLink = sections.mapLink.trim();
+
+    // Debug log to see what was parsed (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Parsed sections:', sections);
+    }
 
     return sections;
-  };
+  } catch (error) {
+    console.error('Error parsing description:', error);
+    return null;
+  }
+};
+
+// Updated JSX for rendering tabs with HTML content
+const renderTabContent = () => {
+  return (
+    <div className="tab-content">
+      {activeTab === 'overview' && parsedDescription.overviewHtml && (
+        <div className="tab-content-panel">
+          <div className="project-overview">
+            <h3 className="section-title">
+              <span className="section-title-icon">🏠</span>
+              Project Overview
+            </h3>
+            <div 
+              className="overview-text"
+              dangerouslySetInnerHTML={{ __html: parsedDescription.overviewHtml }}
+            />
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'features' && parsedDescription.keyFeaturesHtml.length > 0 && (
+        <div className="tab-content-panel">
+          <h3 className="section-title">
+            <span className="section-title-icon">✨</span>
+            Key Features
+          </h3>
+          <div className="features-grid">
+            {parsedDescription.keyFeaturesHtml.map((feature, index) => (
+              <div key={index} className="feature-item">
+                <span className="feature-icon">✓</span>
+                <div className="feature-content">
+                  <div 
+                    className="feature-text"
+                    dangerouslySetInnerHTML={{ __html: feature }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'amenities' && parsedDescription.amenitiesHtml.length > 0 && (
+        <div className="tab-content-panel">
+          <h3 className="section-title">
+            <span className="section-title-icon">🏢</span>
+            World-Class Amenities
+          </h3>
+          <div className="amenities-grid">
+            {parsedDescription.amenitiesHtml.map((amenity, index) => (
+              <div key={index} className="amenity-item">
+                <span className="amenity-icon">🏢</span>
+                <div 
+                  className="amenity-text"
+                  dangerouslySetInnerHTML={{ __html: amenity }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'location' && parsedDescription.locationHighlightsHtml.length > 0 && (
+        <div className="tab-content-panel">
+          <h3 className="section-title">
+            <span className="section-title-icon">📍</span>
+            Location Highlights
+          </h3>
+          <div className="location-grid">
+            {parsedDescription.locationHighlightsHtml.map((highlight, index) => (
+              <div key={index} className="location-item">
+                <span className="location-icon">📍</span>
+                <div className="location-content">
+                  <div 
+                    className="location-text"
+                    dangerouslySetInnerHTML={{ __html: highlight }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'address' && (parsedDescription.addressHtml || parsedDescription.mapLink) && (
+        <div className="tab-content-panel">
+          <h3 className="section-title">
+            <span className="section-title-icon">🏡</span>
+            Property Address
+          </h3>
+          <div className="address-info">
+            <div className="info-card address-card">
+              <span className="info-icon address-icon">🏠</span>
+              <div className="info-content">
+                <h4 className="info-title">Address</h4>
+                {parsedDescription.addressHtml && (
+                  <div 
+                    className="info-text" 
+                    dangerouslySetInnerHTML={{ __html: parsedDescription.addressHtml }}
+                  />
+                )}
+                
+                {parsedDescription.mapLink && (
+                  <div className="map-link-container" style={{ marginTop: '1rem' }}>
+                    <div dangerouslySetInnerHTML={{ __html: parsedDescription.mapLink }} />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'pricing' && parsedDescription.rentInfoHtml && (
+        <div className="tab-content-panel">
+          <h3 className="section-title">
+            <span className="section-title-icon">💰</span>
+            Pricing Information
+          </h3>
+          <div className="pricing-info">
+            <div className="info-card pricing-card">
+              <span className="info-icon pricing-icon">💰</span>
+              <div className="info-content">
+                <h4 className="info-title">Pricing Details</h4>
+                <div 
+                  className="info-text"
+                  dangerouslySetInnerHTML={{ __html: parsedDescription.rentInfoHtml }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
   // SEO setup
   useSEO({
@@ -242,10 +425,11 @@ const ProjectSingle = () => {
     if (selectedConfiguration?.image?.src) {
       return selectedConfiguration.image.src;
     }
-    return currentProduct?.images?.[0]?.src || '/default-project.jpg';
+    // Fallback to first product image or a data URL placeholder
+    return currentProduct?.images?.[0]?.src || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y4ZjlmYSIvPgogIDx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM2YjczODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9qZWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4K';
   };
 
-  // Get available tabs based on content
+  // Get available tabs based on content with enhanced address detection
   const getAvailableTabs = () => {
     if (!parsedDescription) return [];
     
@@ -254,7 +438,8 @@ const ProjectSingle = () => {
     if (parsedDescription.keyFeatures.length > 0) tabs.push({ key: 'features', label: 'Key Features', icon: '✨' });
     if (parsedDescription.amenities.length > 0) tabs.push({ key: 'amenities', label: 'Amenities', icon: '🏢' });
     if (parsedDescription.locationHighlights.length > 0) tabs.push({ key: 'location', label: 'Location', icon: '📍' });
-    if (parsedDescription.address) tabs.push({ key: 'address', label: 'Address', icon: '🏡' });
+    // Enhanced address tab detection
+    if (parsedDescription.address || parsedDescription.mapLink) tabs.push({ key: 'address', label: 'Address', icon: '🏡' });
     if (parsedDescription.rentInfo) tabs.push({ key: 'pricing', label: 'Pricing', icon: '💰' });
     
     return tabs;
@@ -281,9 +466,45 @@ const ProjectSingle = () => {
     return (
       <div className="project-single">
         <div className="project-single__error">
-          <h2>Error Loading Project</h2>
-          <p>{error}</p>
-          <button onClick={() => fetchProductWithVariations(id)}>Try Again</button>
+          <h2>Unable to Load Project</h2>
+          <p>
+            {error.includes('Network Error') || error.includes('CORS') 
+              ? 'Connection issue detected. Please check your network connection or try again later.' 
+              : error
+            }
+          </p>
+          <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => fetchProductWithVariations(id)}
+              style={{
+                background: 'linear-gradient(135deg, #ef4444, #b91c1c)',
+                color: 'white',
+                border: 'none',
+                padding: '0.75rem 1.5rem',
+                borderRadius: '0.5rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Try Again
+            </button>
+            <a 
+              href="/projects"
+              style={{
+                background: 'transparent',
+                color: '#6366f1',
+                border: '2px solid #6366f1',
+                padding: '0.75rem 1.5rem',
+                borderRadius: '0.5rem',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Browse All Projects
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -423,7 +644,7 @@ const ProjectSingle = () => {
                 </div>
               )}
 
-              {activeTab === 'address' && parsedDescription.address && (
+              {activeTab === 'address' && (parsedDescription.address || parsedDescription.mapLink || parsedDescription.addressHtml) && (
                 <div className="tab-content-panel">
                   <h3 className="section-title">
                     <span className="section-title-icon">🏡</span>
@@ -434,7 +655,22 @@ const ProjectSingle = () => {
                       <span className="info-icon address-icon">🏠</span>
                       <div className="info-content">
                         <h4 className="info-title">Address</h4>
-                        <p className="info-text">{parsedDescription.address}</p>
+                        {/* Render HTML content if available, otherwise use plain text */}
+                        {parsedDescription.addressHtml ? (
+                          <div 
+                            className="info-text" 
+                            dangerouslySetInnerHTML={{ __html: parsedDescription.addressHtml }}
+                          />
+                        ) : parsedDescription.address ? (
+                          <p className="info-text">{parsedDescription.address}</p>
+                        ) : null}
+                        
+                        {/* Handle standalone map link if it exists */}
+                        {parsedDescription.mapLink && (
+                          <div className="map-link-container" style={{ marginTop: '1rem' }}>
+                            <div dangerouslySetInnerHTML={{ __html: parsedDescription.mapLink }} />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -471,7 +707,7 @@ const ProjectSingle = () => {
         )}
         
         {/* Configuration Section with Image and Grid */}
-        {currentProduct.variations && currentProduct.variations.length > 0 && (
+        {currentProduct.variations && currentProduct.variations.length > 0 ? (
           <div className="project-single__configurations">
             <h3>Available Configurations</h3>
             
@@ -544,6 +780,57 @@ const ProjectSingle = () => {
               </div>
             </div>
           </div>
+        ) : (
+          // Fallback for when variations fail to load but product loads
+          currentProduct && (
+            <div className="project-single__no-variations">
+              <div className="project-single__basic-info">
+                <h3>Project Information</h3>
+                <div className="basic-info-card" style={{
+                  background: 'linear-gradient(135deg, #f8fafc, #f1f5f9)',
+                  padding: '2rem',
+                  borderRadius: '1rem',
+                  border: '2px solid #e2e8f0',
+                  textAlign: 'center'
+                }}>
+                  <p style={{ 
+                    fontSize: '1.1rem', 
+                    color: '#64748b', 
+                    marginBottom: '1.5rem',
+                    lineHeight: '1.6'
+                  }}>
+                    Configuration details are currently unavailable. Please contact us directly for pricing and availability information.
+                  </p>
+                  <button 
+                    onClick={() => openWhatsApp()}
+                    style={{
+                      background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+                      color: 'white',
+                      border: 'none',
+                      padding: '0.875rem 2rem',
+                      borderRadius: '0.5rem',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.boxShadow = '0 8px 25px rgba(59, 130, 246, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.transform = 'translateY(0)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  >
+                    Get Details & Pricing
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
         )}
         
         <div className="project-single__actions">
