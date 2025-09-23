@@ -77,22 +77,22 @@ const Contact = () => {
                 <div className="contact-page__detail-icon">📞</div>
                 <div>
                   <h3>Phone</h3>
-                  <p>+91 90284 19695</p>
-                  <p>+91 82751 15557</p>
+                  <a href="tel:+919028419695">+91 90284 19695</a><br/>
+                  <a href="tel:+918275115557">+91 82751 15557</a>
                 </div>
               </div>
               <div className="contact-page__detail">
                 <div className="contact-page__detail-icon">✉️</div>
                 <div>
                   <h3>Email</h3>
-                  <p>info@realtywebsite.com</p>
+                  <a href="mailto:info@nashikpropertyclub.com">info@nashikpropertyclub.com</a>
                 </div>
               </div>
               <div className="contact-page__detail">
                 <div className="contact-page__detail-icon">📍</div>
                 <div>
                   <h3>Office</h3>
-                  <p>Nashik Property Club ,Pandit Colony, Opp. Kulkarni Garden,<br/>Nashik, Maharashtra, India</p>
+                  <p>Nashik Property Club, Pandit Colony, Opp. Kulkarni Garden,<br/>Nashik, Maharashtra, India</p>
                 </div>
               </div>
             </div>
