@@ -115,27 +115,29 @@ const ProjectSingle = () => {
 
   // Enhanced description parsing function that preserves HTML links
   // Enhanced description parsing function that preserves HTML links
+// Fixed description parsing function that properly handles Google Maps links
 const parseDescription = (description) => {
   if (!description) return null;
 
   try {
     const sections = {
       overview: '',
-      overviewHtml: '', // Add HTML version
+      overviewHtml: '',
       keyFeatures: [],
-      keyFeaturesHtml: [], // Add HTML version
+      keyFeaturesHtml: [],
       amenities: [],
-      amenitiesHtml: [], // Add HTML version
+      amenitiesHtml: [],
       locationHighlights: [],
-      locationHighlightsHtml: [], // Add HTML version
+      locationHighlightsHtml: [],
       rentInfo: '',
-      rentInfoHtml: '', // Add HTML version
+      rentInfoHtml: '',
       address: '',
-      addressHtml: '', // Store raw HTML for address section
-      mapLink: ''
+      addressHtml: '',
+      mapLink: '',
+      mapLinkHtml: '' // Add separate field for the map link HTML
     };
 
-    // Work with the raw HTML description to preserve links
+    // Work with the raw HTML description
     const lines = description.split('\n')
       .map(line => line.trim())
       .filter(line => line && line.length > 1);
@@ -151,7 +153,7 @@ const parseDescription = (description) => {
       const textLine = tempDiv.textContent || tempDiv.innerText || '';
       const lowerLine = textLine.toLowerCase();
       
-      // Enhanced section detection with more patterns
+      // Enhanced section detection
       if (lowerLine.includes('key features:') || lowerLine.includes('features:')) {
         currentSection = 'keyFeatures';
         collectingItems = true;
@@ -168,9 +170,7 @@ const parseDescription = (description) => {
         lowerLine.includes('address:') || 
         textLine.includes('📍') || 
         lowerLine.includes('**address:**') ||
-        lowerLine.startsWith('📍') ||
-        line.includes('Google Maps:') ||
-        line.includes('google maps:')
+        lowerLine.startsWith('📍')
       ) {
         currentSection = 'address';
         collectingItems = false;
@@ -182,46 +182,49 @@ const parseDescription = (description) => {
       }
 
       // Check for Google Maps link pattern in the raw HTML
-      if (line.includes('maps.app.goo.gl') || line.includes('View on Google Maps')) {
-        sections.mapLink = line;
+      if (line.includes('maps.app.goo.gl') || line.includes('Google Maps:') || line.includes('google maps:')) {
+        sections.mapLink = textLine.replace('Google Maps:', '').replace('google maps:', '').trim();
+        sections.mapLinkHtml = line; // Store the HTML version
         return;
       }
 
       // Content allocation - preserve HTML for ALL sections
       if (currentSection === 'overview' && overviewLineCount < 3) {
         sections.overview += textLine + ' ';
-        sections.overviewHtml += line + ' '; // Store HTML version
+        sections.overviewHtml += line + ' ';
         overviewLineCount++;
       } else if (currentSection === 'keyFeatures' && collectingItems) {
         if (textLine && !lowerLine.includes('key features:') && !lowerLine.includes('features:')) {
           sections.keyFeatures.push(textLine);
-          sections.keyFeaturesHtml.push(line); // Store HTML version
+          sections.keyFeaturesHtml.push(line);
         }
       } else if (currentSection === 'amenities' && collectingItems) {
         if (textLine && !lowerLine.includes('amenities:')) {
           sections.amenities.push(textLine);
-          sections.amenitiesHtml.push(line); // Store HTML version
+          sections.amenitiesHtml.push(line);
         }
       } else if (currentSection === 'locationHighlights' && collectingItems) {
         if (textLine && !lowerLine.includes('location')) {
           sections.locationHighlights.push(textLine);
-          sections.locationHighlightsHtml.push(line); // Store HTML version
+          sections.locationHighlightsHtml.push(line);
         }
       } else if (currentSection === 'address' && !collectingItems) {
         if (
           line && 
           !lowerLine.includes('address:') && 
           !textLine.includes('📍') &&
-          !lowerLine.includes('**address:**')
+          !lowerLine.includes('**address:**') &&
+          !line.includes('Google Maps:') &&
+          !line.includes('google maps:') &&
+          !line.includes('maps.app.goo.gl')
         ) {
-          // Store both text and HTML versions for the address
           sections.address += textLine + ' ';
           sections.addressHtml += line + ' ';
         }
       } else if (currentSection === 'rentInfo' && !collectingItems) {
         if (textLine && !lowerLine.includes('rent:') && !lowerLine.includes('price:') && !lowerLine.includes('💰') && !lowerLine.includes('pricing details:')) {
           sections.rentInfo += textLine + ' ';
-          sections.rentInfoHtml += line + ' '; // Store HTML version
+          sections.rentInfoHtml += line + ' ';
         }
       }
     });
@@ -234,11 +237,7 @@ const parseDescription = (description) => {
     sections.rentInfo = sections.rentInfo.trim();
     sections.rentInfoHtml = sections.rentInfoHtml.trim();
     sections.mapLink = sections.mapLink.trim();
-
-    // Debug log to see what was parsed (only in development)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Parsed sections:', sections);
-    }
+    sections.mapLinkHtml = sections.mapLinkHtml.trim();
 
     return sections;
   } catch (error) {
