@@ -104,7 +104,7 @@ const Contact = () => {
             </div>
           </div>
 
-          <div className="contact-page__form-container">
+          {/* <div className="contact-page__form-container">
             <form onSubmit={handleSubmit} className="contact-page__form">
               <h2>Send us a Message</h2>
               
@@ -173,7 +173,7 @@ const Contact = () => {
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </Button>
             </form>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
