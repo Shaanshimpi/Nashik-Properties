@@ -1,11 +1,17 @@
 // src/pages/Contact/Contact.jsx
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import MetaTags from '../../components/common/SEO/MetaTags';
 import Button from '../../components/ui/Button/Button';
 import Input from '../../components/ui/Input/Input';
 import './Contact.css';
 
 const Contact = () => {
+
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   const [formData, setFormData] = useState({
     name: '',
     email: '',

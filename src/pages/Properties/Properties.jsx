@@ -12,6 +12,11 @@ import Layout from '../../components/common/Layout/Layout';
 import { extractTaxonomies } from '../../services/api/wordpress';
 
 const Properties = () => {
+
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [filters, setFilters] = useState({

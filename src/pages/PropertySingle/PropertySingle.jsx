@@ -1,5 +1,6 @@
 // src/pages/PropertySingle/PropertySingle.jsx
 import React from 'react';
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PropertyDetail from '../../components/property/PropertyDetail/ProperttDetail';
 import MetaTags from '../../components/common/SEO/MetaTags';
@@ -10,6 +11,10 @@ import Spinner from '../../components/common/Loading/Spinner';
 import './PropertySingle.css';
 
 const PropertySingle = () => {
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   const { id } = useParams();
   const { property, isLoading, error } = useProperty(id);
 

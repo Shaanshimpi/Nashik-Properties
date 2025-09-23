@@ -1,9 +1,15 @@
 // src/pages/BusinessModel/BusinessModel.jsx
 import React from 'react';
 import MetaTags from '../../components/common/SEO/MetaTags';
+import { useEffect } from 'react';
 import './BusinessModel.css';
 
 const BusinessModel = () => {
+  
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
   return (
     <>
       <MetaTags

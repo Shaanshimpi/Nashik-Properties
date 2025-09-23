@@ -72,6 +72,11 @@ const ProjectHeroHeader = ({ currentProduct, loading }) => {
 };
 
 const ProjectSingle = () => {
+
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   const { id } = useParams();
   const { currentProduct, loading, error, fetchProductWithVariations } = useProducts();
   const [selectedConfiguration, setSelectedConfiguration] = useState(null);

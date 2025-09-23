@@ -91,6 +91,11 @@ const FEATURES_DATA = [
 ];
 
 const Home = () => {
+
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   const { properties: initialProperties, projects: initialProjects } = useLoaderData();
   const navigate = useNavigate();
   

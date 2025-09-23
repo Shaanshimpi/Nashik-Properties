@@ -1,11 +1,17 @@
 // src/pages/NotFound/NotFound.jsx
 import React from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MetaTags from '../../components/common/SEO/MetaTags';
 import Button from '../../components/ui/Button/Button';
 import './NotFound.css';
 
 const NotFound = () => {
+  
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
   return (
     <>
       <MetaTags

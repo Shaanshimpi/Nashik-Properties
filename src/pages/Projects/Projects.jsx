@@ -8,6 +8,11 @@ import { getCategories } from '../../services/api/woocommerce';
 import './Projects.css';
 
 const Projects = () => {
+
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   const { products, loading, error, fetchProducts } = useProducts();
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);

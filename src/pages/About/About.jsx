@@ -1,9 +1,15 @@
 import React from 'react';
 import MetaTags from '../../components/common/SEO/MetaTags';
 import { generateSEOTitle, generateCanonicalUrl } from '../../services/seo/seoHelpers';
+import { useEffect } from 'react';
 import './About.css';
 
 const About = () => {
+
+  useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+
   const seoData = {
     title: generateSEOTitle('About Us'),
     description: 'Learn about Nashik Properties - Your trusted partner in real estate. We help you find your dream property with expert guidance and personalized service.',
