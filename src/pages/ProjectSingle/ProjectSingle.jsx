@@ -6,7 +6,7 @@ import ProjectGallery from '../../components/project/ProjectGallery/ProjectGalle
 import './ProjectSingle.css';
 
 // WhatsApp configuration - Update this with your actual WhatsApp number
-const WHATSAPP_NUMBER = '919322076796'; // Replace with your WhatsApp number (with country code, no + sign)
+const WHATSAPP_NUMBER = '919028419695'; // Replace with your WhatsApp number (with country code, no + sign)
 
 const ProjectHeroHeader = ({ currentProduct, loading }) => {
   const heroImage = currentProduct?.images?.[0]?.src;
